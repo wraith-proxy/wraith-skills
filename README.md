@@ -1,6 +1,24 @@
-# wraith-skills (tracer spike)
+# wraith
 
-This is a throwaway tracer bullet for the wraith plugin. It holds the smallest
-possible plugin: one skill, one agent, and two hooks, laid out for both Claude
-Code and GitHub Copilot. It exists only to prove that one repository can serve
-both hosts before any real content is written. See PLAN.md, Phase 0.
+wraith is a plugin of skills and agents for data and infrastructure
+engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts
+and ontologies. It runs the work as a plan, build, review, ship sprint, and it
+works in both Claude Code and GitHub Copilot from one repository.
+
+## Install
+
+Claude Code:
+
+```bash
+claude plugin marketplace add wraith-proxy/wraith-skills
+claude plugin install wraith@wraith-proxy
+```
+
+GitHub Copilot CLI:
+
+```bash
+copilot plugin marketplace add wraith-proxy/wraith-skills
+copilot plugin install wraith@wraith-proxy
+```
+
+wraith runs two local Python hooks and sends nothing anywhere.
