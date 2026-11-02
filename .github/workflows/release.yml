@@ -1,0 +1,40 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --locked
+      - name: bump, tag and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          before="$(uv run cz version --project)"
+          uv run cz --no-raise 3,21 bump --yes --changelog \
+            --changelog-to-stdout --git-output-to-stderr > notes.md
+          after="$(uv run cz version --project)"
+          if [ "$before" = "$after" ]; then
+            echo "no commits to bump"
+            exit 0
+          fi
+          git push origin HEAD:main "v$after"
+          gh release create "v$after" --title "v$after" --notes-file notes.md
