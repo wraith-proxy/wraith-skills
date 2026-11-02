@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import privacy_scan
@@ -140,6 +141,10 @@ def test_skips_lockfiles_and_binary(tmp_path):
 
 def test_no_args_scans_git_ls_files(tmp_path, monkeypatch, capsys):
     monkeypatch.delenv("WRAITH_PRIVATE_TERMS_FILE", raising=False)
+    # git hooks export GIT_INDEX_FILE; in a worktree it is absolute and
+    # would point the tmp repo's git add at the real index.
+    for key in [k for k in os.environ if k.startswith("GIT_")]:
+        monkeypatch.delenv(key)
     monkeypatch.chdir(tmp_path)
     write(tmp_path, "10." + "1.2.3", "tracked.txt")
     subprocess.run(["git", "init", "-q"], check=True)
