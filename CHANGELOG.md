@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.3 (2026-11-02)
+
+### Bug Fixes
+
+- show in-session plugin install commands in README (#22)
+
 ## v0.5.2 (2026-11-02)
 
 ### Bug Fixes
