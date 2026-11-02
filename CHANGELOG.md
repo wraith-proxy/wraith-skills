@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.2 (2026-11-02)
+
+### Bug Fixes
+
+- skip release when no files changed (#21)
+
 ## v0.5.1 (2026-11-02)
 
 ### Bug Fixes
