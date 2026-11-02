@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.4.0 (2026-11-02)
+
+### Bug Fixes
+
+- let codespell accept disjointness
+- guard asks on git branch -D only, not -d
+
+### Features
+
+- hooks, evals and README (#16)
+- add session-start router and destructive-command guard
+- add trigger and quality evals
+- write README
+
 ## v0.3.0 (2026-11-02)
 
 ### Features
