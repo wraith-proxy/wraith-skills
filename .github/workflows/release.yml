@@ -32,6 +32,10 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
+          if git diff --quiet "$(git describe --tags --abbrev=0)" HEAD; then
+            echo "no file changes since last release"
+            exit 0
+          fi
           slug="${{ steps.app.outputs.app-slug }}"
           bot_id="$(gh api "/users/${slug}[bot]" --jq .id)"
           git config user.name "${slug}[bot]"
