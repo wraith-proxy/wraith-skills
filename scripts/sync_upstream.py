@@ -264,10 +264,13 @@ def main(argv: list[str] | None = None) -> int:
 
     rows: list[Row] = []
     changes: dict[str, Change] = {}
+    blocked: set[str] = set()
     for rel, entries in provenance(args.root).items():
         row, change = _sync_file(args.root, rel, entries, args.old, args.new)
         if row:
             rows.append(row)
+            if row.status != "clean":
+                blocked.update(key for key, _, _ in entries)
         if change:
             changes[rel] = change
     drift = _companion_drift(args.old, args.new)
@@ -279,6 +282,17 @@ def main(argv: list[str] | None = None) -> int:
         )
     args.report.write_text(
         _report(pins, rows, changes, drift), encoding="utf-8"
+    )
+    # Pins the workflow may bump: a KEY with any unmerged file keeps its
+    # old pin, or the next run would diff from the new one and lose it.
+    print(
+        " ".join(
+            key
+            for key, _, _, sha in pins
+            if key not in COMPANIONS
+            and key not in blocked
+            and _sha(args.old / key) != sha
+        )
     )
 
     companion_hits = any(r.hits for d in drift.values() for r in d)
