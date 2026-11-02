@@ -62,7 +62,7 @@ PATTERNS = [
     ),
     ("git-reset-hard", SHELL, r"\bgit\s+reset\s+--hard\b"),
     ("git-clean-force", SHELL, r"\bgit\s+clean\s+-[a-z]*f"),
-    ("git-branch-force-delete", SHELL, r"\bgit\s+branch\s+-D\b"),
+    ("git-branch-force-delete", SHELL, r"\bgit\s+branch\s+(?-i:-D)\b"),
     (
         "rm-root-or-home",
         SHELL,

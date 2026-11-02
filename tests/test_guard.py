@@ -32,7 +32,7 @@ CASES = [
     ("git-force-push", "git push --force origin x", "git push origin x"),
     ("git-reset-hard", "git reset --hard HEAD~1", "git reset --soft HEAD~1"),
     ("git-clean-force", "git clean -fd", "git clean -n"),
-    ("git-branch-force-delete", "git branch -D x", "git branch -m x"),
+    ("git-branch-force-delete", "git branch -D x", "git branch -d x"),
     ("dbt-prod-target", "dbt run --target prod", "dbt run --target dev"),
     ("rm-root-or-home", "rm -rf ~", "rm -rf build"),
 ]
