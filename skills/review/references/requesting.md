@@ -29,7 +29,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 **2. Dispatch code reviewer subagent:**
 
-Dispatch a `general-purpose` subagent, filling the template at [the code reviewer template](#code-reviewer-template)
+Dispatch a `wraith:reviewer` subagent, filling the template at [the code reviewer template](#code-reviewer-template)
 
 **Placeholders:**
 - `{DESCRIPTION}` - Brief summary of what you built
@@ -101,7 +101,7 @@ Use this template when dispatching a code reviewer subagent.
 **Purpose:** Review completed work against requirements and code quality standards before it cascades into more work.
 
 ```
-Subagent (general-purpose):
+Subagent (wraith:reviewer):
   description: "Review code changes"
   prompt: |
     You are a Senior Code Reviewer with expertise in software architecture,

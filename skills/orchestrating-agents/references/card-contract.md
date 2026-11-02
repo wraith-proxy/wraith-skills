@@ -38,3 +38,23 @@ Report in at most 200 words: the files you changed, the commands you ran with th
 10. Every number in the implementer's report matches the artifact.
 
 Verdict: APPROVE, or CHANGES with a numbered list of blockers.
+
+## Workspace, briefs and review packages
+
+- **Workspace.** Each plan owns `<artifacts_dir>/<YYYY-MM-DD>-<topic>/`,
+  next to its `plan.md`. It holds `progress.md` (the ledger), `briefs/`
+  and `reviews/`. Never reuse another plan's workspace.
+- **Ledger.** The first line of `progress.md` names the plan file. Append
+  `Task <N>: complete` when a card is integrated, and one line per fix
+  round.
+- **Brief.** Before dispatching a card, write `briefs/card-<ID>.md`: the
+  prompt above with the angle brackets filled, followed by the plan's
+  Global constraints and the card text, copied verbatim. The implementer
+  and the reviewer read the same brief.
+- **Review package.** Record BASE before dispatching. When the card
+  reports DONE, write `reviews/card-<ID>-<base7>-<head7>.md` containing
+  `git log --oneline BASE..HEAD`, `git diff --stat BASE..HEAD` and
+  `git diff BASE..HEAD`, in that order. Pass the reviewer the path; do
+  not read the package into your own context. For a fix round, BASE is
+  the head the previous review saw. For the final review, BASE is the
+  merge-base with the target branch.

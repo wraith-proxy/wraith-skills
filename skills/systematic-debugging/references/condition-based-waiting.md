@@ -80,7 +80,7 @@ async function waitFor<T>(
 }
 ```
 
-See `condition-based-waiting-example.ts` in this directory for complete implementation with domain-specific helpers (`waitForEvent`, `waitForEventCount`, `waitForEventMatch`) from actual debugging session.
+Build domain-specific helpers on the same loop (wait for an event, for a count of events, for an event matching a predicate) rather than adding sleeps.
 
 ## Common Mistakes
 
