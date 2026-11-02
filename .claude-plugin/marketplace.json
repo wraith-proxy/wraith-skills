@@ -1,1 +1,12 @@
-{"name": "wraith-proxy", "description": "spike", "owner": {"name": "wraith-proxy"}, "plugins": [{"name": "wraith", "source": "./", "description": "spike"}]}
+{
+  "name": "wraith-proxy",
+  "description": "Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies.",
+  "owner": {"name": "wraith-proxy", "url": "https://github.com/wraith-proxy"},
+  "plugins": [
+    {
+      "name": "wraith",
+      "source": "./",
+      "description": "Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies."
+    }
+  ]
+}

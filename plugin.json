@@ -1,1 +1,25 @@
-{"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", "name": "wraith", "version": "0.0.1", "description": "spike", "license": "MIT"}
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "wraith",
+  "version": "0.1.0",
+  "description": "Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies, run as a plan, build, review, ship sprint.",
+  "author": {
+    "name": "wraith-proxy",
+    "url": "https://github.com/wraith-proxy"
+  },
+  "homepage": "https://github.com/wraith-proxy/wraith-skills",
+  "repository": "https://github.com/wraith-proxy/wraith-skills",
+  "license": "MIT",
+  "keywords": [
+    "data-engineering",
+    "gcp",
+    "bigquery",
+    "dbt",
+    "cloud-run",
+    "terraform",
+    "odcs",
+    "data-contracts",
+    "ontology",
+    "agents"
+  ]
+}

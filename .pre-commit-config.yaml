@@ -1,0 +1,68 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-toml
+    -   id: check-json
+    -   id: check-added-large-files
+        args: [--maxkb=256]
+    -   id: check-merge-conflict
+    -   id: check-case-conflict
+    -   id: check-symlinks
+    -   id: destroyed-symlinks
+    -   id: debug-statements
+    -   id: check-executables-have-shebangs
+    -   id: check-shebang-scripts-are-executable
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.20
+    hooks:
+    -   id: ruff-check
+        args: [--fix]
+    -   id: ruff-format
+-   repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+    -   id: codespell
+        exclude: uv.lock|\.secrets\.baseline
+-   repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.11.26
+    hooks:
+    -   id: uv-lock
+-   repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+    -   id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: uv.lock
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: pytest (coverage 80)
+        entry: uv run pytest -q
+        language: system
+        pass_filenames: false
+        always_run: true
+    -   id: lint-skills
+        name: lint skills and agents
+        entry: uv run python scripts/lint_skills.py
+        language: system
+        pass_filenames: false
+        always_run: true
+    -   id: build-copilot
+        name: copilot agents up to date
+        entry: uv run python scripts/build_copilot.py --check
+        language: system
+        pass_filenames: false
+        always_run: true
+    -   id: privacy-scan
+        name: privacy scan
+        entry: uv run python scripts/privacy_scan.py
+        language: system
+    -   id: commitizen
+        name: commitizen check
+        entry: uv run cz check --commit-msg-file
+        language: system
+        stages: [commit-msg]
