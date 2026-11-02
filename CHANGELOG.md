@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.3.0 (2026-11-02)
+
+### Features
+
+- sprint skills and agents (#15)
+- add security-audit and careful
+- add qa
+- add deploy
+- add core agents
+- add specialist agents
+
 ## v0.2.0 (2026-11-02)
 
 ### Bug Fixes
