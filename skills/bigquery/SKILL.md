@@ -51,15 +51,15 @@ Changes to `gcp_project_prod`, datasets (`terraform_dir`) or spend above the cap
 
 These Google skills are companions. Name them, do not copy them. Each is recommended with caveat.
 
-- bigquery-basics: wraith:bigquery needs a basic CLI recipe
-- bigquery-optimization: wraith:bigquery cost and layout review
-- bigquery-troubleshooting: wraith:bigquery incident and cost-spike diagnosis
-- bigquery-observability: wraith:bigquery slot, queue and reservation checks
-- bigquery-ai-ml: wraith:bigquery when the task is BigQuery ML or GenAI SQL
-- bigquery-udfs: wraith:bigquery when a custom function is asked for
-- datalineage-summary: wraith:bigquery provenance questions
-- datalineage-bigquery-asset-impact-analysis: wraith:plan-data-review impact check
-- cloud-logging-query-generation: wraith:bigquery or wraith:cloud-run log debugging
+- `bigquery-basics`: wraith:bigquery needs a basic CLI recipe
+- `bigquery-optimization`: wraith:bigquery cost and layout review
+- `bigquery-troubleshooting`: wraith:bigquery incident and cost-spike diagnosis
+- `bigquery-observability`: wraith:bigquery slot, queue and reservation checks
+- `bigquery-ai-ml`: wraith:bigquery when the task is BigQuery ML or GenAI SQL
+- `bigquery-udfs`: wraith:bigquery when a custom function is asked for
+- `datalineage-summary`: wraith:bigquery provenance questions
+- `datalineage-bigquery-asset-impact-analysis`: wraith:plan-data-review impact check
+- `cloud-logging-query-generation`: wraith:bigquery or wraith:cloud-run log debugging
 
 Telemetry: these skills ask the agent to set an attribution tag that reports usage to Google; tell the user and let them choose.
 
