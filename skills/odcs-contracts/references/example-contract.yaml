@@ -1,0 +1,60 @@
+# Adapted from bitol-io/open-data-contract-standard v3.2.0 docs/examples/all/full-example.odcs.yaml (Apache-2.0).
+apiVersion: v3.2.0
+kind: DataContract
+id: 53581432-6c55-4ba2-a65f-72344a91553a
+version: 1.0.0
+team: {name: customer-data}
+customProperties:
+  - property: wraith.classifications
+    value: [public, internal, pii, psi]
+schema:
+  - name: customers
+    physicalName: raw_customers
+    description: One row per registered customer account, as held by the source system.
+    properties:
+      - name: customer_id
+        physicalName: cust_id
+        logicalType: string
+        physicalType: STRING
+        required: true
+        primaryKey: true
+        classification: internal
+        description: Stable identifier of the customer account, never reused after deletion.
+      - name: email
+        physicalName: email_addr
+        logicalType: string
+        physicalType: STRING
+        required: true
+        classification: pii
+        description: Primary contact email address the customer signed up with.
+        quality:
+          - metric: nullValues
+            mustBe: 0
+            description: Every customer must have an email address.
+      - name: country
+        physicalName: cntry_cd
+        logicalType: string
+        physicalType: STRING
+        required: false
+        classification: internal
+        description: ISO 3166-1 alpha-2 code of the customer's country of residence.
+      - name: created_at
+        physicalName: created_ts
+        logicalType: timestamp
+        physicalType: TIMESTAMP
+        required: true
+        classification: internal
+        description: UTC moment the customer account was first created in the source system.
+      - name: marketing_opt_in
+        physicalName: mkt_opt_in
+        logicalType: boolean
+        physicalType: BOOL
+        required: false
+        classification: internal
+        description: Whether the customer agreed to receive marketing messages at last check.
+slaProperties:
+  - property: freshness
+    value: 24
+    unit: h
+    element: customers.created_at
+    description: On breach the owning team is paged and consumers are told.
