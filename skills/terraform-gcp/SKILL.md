@@ -61,6 +61,13 @@ HashiCorp skills from `hashicorp/agent-skills` (plugin `terraform`), vetted in A
 - `refactor-module`: Extracting a module and moving state with `moved` blocks.
 - `terraform-search-import`: Bringing existing cloud resources under Terraform, on Terraform 1.14+.
 
+Google skills, vetted in ADR 0003. Terraform output only; this skill runs the plan and apply:
+
+- `cloud-run-alert-configuration`: PromQL alert policies for Cloud Run, with `wraith:cloud-run`.
+- `google-cloud-slo-alert-configuration`: PromQL SLO alert policies.
+
+They ask the agent to set an attribution tag that reports usage to Google; tell the user and let them choose.
+
 Where a companion step disagrees with this skill:
 
 - `refactor-module` runs `terraform state mv` as a plain step. Here it runs only after the user's go-ahead, and `moved` blocks are preferred because they show in the plan.
