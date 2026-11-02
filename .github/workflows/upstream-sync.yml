@@ -1,0 +1,142 @@
+name: upstream-sync
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.WRAITH_BOT_APP_ID }}
+          private-key: ${{ secrets.WRAITH_BOT_PRIVATE_KEY }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app.outputs.token }}
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --locked
+      - name: Fetch old and new upstream
+        run: |
+          sh scripts/fetch_upstream.sh
+          sh scripts/fetch_upstream.sh --new-dir .upstream-new
+      - name: Compare upstream
+        id: sync
+        run: |
+          code=0
+          keys=$(uv run python scripts/sync_upstream.py \
+            --old .upstream --new .upstream-new \
+            --report sync-report.md) || code=$?
+          drift=false
+          if grep -q '^## Companion drift' sync-report.md; then
+            drift=true
+          fi
+          {
+            echo "code=$code"
+            echo "keys=$keys"
+            echo "drift=$drift"
+          } >> "$GITHUB_OUTPUT"
+          if [ "$code" != 0 ] && [ "$code" != 10 ] && [ "$code" != 20 ]; then
+            echo "sync_upstream.py failed with exit code $code"
+            exit "$code"
+          fi
+      - name: Check for open sync PR
+        id: open
+        if: steps.sync.outputs.code != '0'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          n=$(gh pr list --state open --json headRefName \
+            --jq '[.[] | select(.headRefName | startswith("bot/upstream-sync-"))] | length')
+          if [ "$n" != 0 ]; then
+            echo "An open upstream sync PR exists; skipping PR creation."
+          fi
+          echo "exists=$([ "$n" != 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - name: Open sync PR
+        id: pr
+        if: steps.sync.outputs.code != '0' && steps.open.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          KEYS: ${{ steps.sync.outputs.keys }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+        run: |
+          bot_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${bot_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          for key in $KEYS; do
+            url=$(grep "^$key " scripts/fetch_upstream.sh | cut -d' ' -f2)
+            ref=$(git -C ".upstream-new/$key" describe --tags --exact-match 2>/dev/null || echo -)
+            sha=$(git -C ".upstream-new/$key" rev-parse HEAD)
+            sed -i "s|^$key .*|$key $url $ref $sha|" scripts/fetch_upstream.sh
+          done
+          uv run python scripts/build_copilot.py
+          branch="bot/upstream-sync-$(date -u +%Y%m%d)"
+          git switch -c "$branch"
+          git add -u
+          git commit --allow-empty -m "👻 fix/WSK-00010: sync upstream ${KEYS:-report only}"
+          git push origin "$branch"
+          url=$(gh pr create --head "$branch" \
+            --title "👻 fix/WSK-00010: sync upstream ${KEYS:-report only}" \
+            --body-file sync-report.md)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: steps.sync.outputs.code == '10' && steps.pr.outputs.url != '' && env.ANTHROPIC_API_KEY != ''
+        with:
+          node-version: 22
+      - name: Trigger evals
+        id: evals
+        if: steps.sync.outputs.code == '10' && steps.pr.outputs.url != ''
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY not set; evals skipped."
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          npm install -g @anthropic-ai/claude-code@2.1.316
+          ok=true
+          claude plugin eval . --trust-plugin --ablation none \
+            --tag trigger --max-cost-usd 5 || ok=false
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+      - name: Auto-merge or flag for review
+        if: steps.pr.outputs.url != ''
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+          CODE: ${{ steps.sync.outputs.code }}
+          EVALS_OK: ${{ steps.evals.outputs.ok }}
+        run: |
+          if [ "$CODE" = 10 ] && [ "$EVALS_OK" = true ]; then
+            gh pr merge --auto --squash "$PR_URL"
+          else
+            gh label create needs-review --color d93f0b --force
+            gh pr edit "$PR_URL" --add-label needs-review
+          fi
+      - name: Companion drift issues
+        if: steps.sync.outputs.drift == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          sed -n '/^## Companion drift/,$p' sync-report.md > drift.md
+          for key in $(sed -n 's/^### //p' drift.md); do
+            sed -n "/^### $key\$/,/^### /p" drift.md | sed '${/^### /d}' > "body-$key.md"
+            title="re-vet $key"
+            num=$(gh issue list --state open --search "$title in:title" \
+              --json number,title \
+              --jq "[.[] | select(.title == \"$title\")][0].number // empty")
+            if [ -n "$num" ]; then
+              gh issue edit "$num" --body-file "body-$key.md"
+            else
+              gh issue create --title "$title" --body-file "body-$key.md"
+            fi
+          done
