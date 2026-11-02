@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.0 (2026-11-02)
+
+### Features
+
+- upstream sync and release automation (#17)
+- add upstream sync engine
+- print keys whose pins are safe to bump
+- add release workflow
+- add nightly upstream sync workflow
+
 ## v0.4.0 (2026-11-02)
 
 ### Bug Fixes
