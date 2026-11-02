@@ -16,14 +16,14 @@ commitizen:
       fix: PATCH
       bug: PATCH
     bump_pattern: '(feature|fix|bug|break)/WSK-\d{5}'
-    commit_parser: '(?P<change_type>feature|fix|bug|break)/WSK-\d{5}: (?P<message>.*)'
+    commit_parser: '^.*?(?P<change_type>feature|fix|bug|break)/WSK-\d{5}: (?P<message>.*)'
     change_type_map:
       break: "Breaking Changes"
       feature: "Features"
       fix: "Bug Fixes"
       bug: "Bug Fixes"
     change_type_order: [break, feature, fix, bug]
-    changelog_pattern: '(feature|fix|bug|break)/WSK-\d{5}'
+    changelog_pattern: '^.*(feature|fix|bug|break)/WSK-\d{5}'
     example: '👻 feature/WSK-00001: add implementation plan'
     message_template: '{{change_type}}: {{message}}'
     questions:
