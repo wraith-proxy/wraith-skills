@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "wraith",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies, run as a plan, build, review, ship sprint.",
   "author": {
     "name": "wraith-proxy",
