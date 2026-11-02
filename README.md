@@ -8,16 +8,28 @@ Claude Code and GitHub Copilot from one repository.
 
 ## Install
 
-Claude Code:
+One repository installs into both Claude Code and GitHub Copilot.
+
+Claude Code or GitHub Copilot CLI, inside a session:
+
+Register the marketplace:
+
+```text
+/plugin marketplace add wraith-proxy/wraith-skills
+```
+
+Install the plugin from this marketplace:
+
+```text
+/plugin install wraith@wraith-proxy
+```
+
+Or from a terminal:
 
 ```bash
 claude plugin marketplace add wraith-proxy/wraith-skills
 claude plugin install wraith@wraith-proxy
-```
 
-GitHub Copilot CLI:
-
-```bash
 copilot plugin marketplace add wraith-proxy/wraith-skills
 copilot plugin install wraith@wraith-proxy
 ```
