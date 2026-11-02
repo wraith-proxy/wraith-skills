@@ -1,0 +1,1 @@
+{"name": "wraith-proxy", "description": "spike", "owner": {"name": "wraith-proxy"}, "plugins": [{"name": "wraith", "source": "./", "description": "spike"}]}
