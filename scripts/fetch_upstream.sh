@@ -60,4 +60,32 @@ fetch() {
     done
 }
 
-if [ "${1:-}" = "--outdated" ]; then outdated; else fetch; fi
+fetch_new() {
+    out=$1
+    mkdir -p "$out"
+    pins | while read -r key url _ref _sha; do
+        dir=$out/$key
+        rm -rf "$dir"
+        mkdir -p "$dir"
+        git -C "$dir" init -q
+        git -C "$dir" remote add origin "$url"
+        tag=$(git ls-remote --tags --refs --sort=-v:refname "$url" |
+            head -n 1 | sed 's|.*refs/tags/||')
+        if [ -n "$tag" ]; then
+            git -C "$dir" fetch -q --depth 1 origin tag "$tag"
+        else
+            git -C "$dir" fetch -q --depth 1 origin HEAD
+        fi
+        git -C "$dir" checkout -q --detach FETCH_HEAD
+        echo "$key ${tag:--} $(git -C "$dir" rev-parse HEAD)"
+    done
+}
+
+case "${1:-}" in
+    --outdated) outdated ;;
+    --new-dir)
+        [ -n "${2:-}" ] || { echo "usage: $0 --new-dir <dir>" >&2; exit 2; }
+        fetch_new "$2"
+        ;;
+    *) fetch ;;
+esac

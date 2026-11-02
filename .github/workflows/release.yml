@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: release
@@ -17,17 +17,25 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-24.04
     steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.WRAITH_BOT_APP_ID }}
+          private-key: ${{ secrets.WRAITH_BOT_PRIVATE_KEY }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          token: ${{ steps.app.outputs.token }}
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       - run: uv sync --locked
       - name: bump, tag and release
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          slug="${{ steps.app.outputs.app-slug }}"
+          bot_id="$(gh api "/users/${slug}[bot]" --jq .id)"
+          git config user.name "${slug}[bot]"
+          git config user.email "${bot_id}+${slug}[bot]@users.noreply.github.com"
           before="$(uv run cz version --project)"
           uv run cz --no-raise 3,21 bump --yes --changelog \
             --changelog-to-stdout --git-output-to-stderr > notes.md
@@ -37,4 +45,5 @@ jobs:
             exit 0
           fi
           git push origin HEAD:main "v$after"
+          git push origin "v$after:refs/heads/release"
           gh release create "v$after" --title "v$after" --notes-file notes.md
