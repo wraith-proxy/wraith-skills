@@ -1,0 +1,17 @@
+.upstream/
+.upstream-new/
+sync-report.md
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+evals/results/
+.wraith/guard-mode
+.env
+.env.private
+.claude/settings.local.json
+.aider*
+.DS_Store
