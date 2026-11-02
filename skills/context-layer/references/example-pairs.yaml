@@ -1,0 +1,14 @@
+- id: orders-001
+  question: How many orders were placed yesterday?
+  sql: "SELECT COUNT(*) AS orders FROM `example-project-dev.sales.fct_orders` WHERE ds = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)"
+  owner: sales-analytics
+  status: accepted
+  last_verified: 2026-10-30
+  notes: Grain is one row per order per ds. Cancelled orders are included.
+- id: orders-002
+  question: What was net revenue last week by account type?
+  sql: "SELECT account_type, SUM(net_amount) AS net_revenue FROM `example-project-dev.sales.fct_orders` WHERE ds BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) GROUP BY account_type"
+  owner: sales-analytics
+  status: proposed
+  last_verified: null
+  notes: Candidate from query history. Net revenue must match the semantic layer metric before acceptance.

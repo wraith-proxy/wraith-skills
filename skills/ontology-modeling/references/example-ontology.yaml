@@ -1,0 +1,59 @@
+meta:
+  name: retail-banking
+  version: 0.1.0
+  owner: data-platform
+classes:
+  Customer:
+    doc: A person or organisation that holds at least one Account.
+    status: accepted
+    properties:
+      customer_id:
+        type: string
+        required: true
+        doc: Stable identifier issued at onboarding.
+        status: accepted
+  Account:
+    doc: A product arrangement under which a Customer places Orders.
+    status: accepted
+    properties:
+      account_type:
+        type: AccountType
+        required: true
+        doc: The product family of the Account.
+        status: accepted
+  Order:
+    doc: A request by a Customer to buy a product, billed to one Account.
+    status: accepted
+    disjointWith: [Account]
+taxonomies:
+  AccountType:
+    doc: The product family an Account belongs to.
+    values:
+      current: Everyday account with a card.
+      savings: Interest-bearing account without a card.
+links:
+  holds:
+    from: Customer
+    to: Account
+    cardinality: "1..*"
+    inverse: heldBy
+    doc: A Customer holds one or more Accounts.
+    status: accepted
+    provenance: onboarding process review
+    confidence: high
+  placedAgainst:
+    from: Order
+    to: Account
+    cardinality: "1..1"
+    inverse: hasOrder
+    doc: An Order is billed to exactly one Account.
+    status: proposed
+    provenance: extraction from orders table
+    confidence: medium
+axioms:
+  - id: AX-001
+    statement: Every Order is placed against exactly one Account.
+    rationale: Billing and refunds resolve through the Account.
+  - id: AX-002
+    statement: An Account with no holding Customer is invalid.
+    rationale: Regulatory ownership must be traceable to a Customer.
