@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.7 (2026-11-03)
+
+### Bug Fixes
+
+- ignore HANDOVER.md (#27)
+
 ## v0.5.6 (2026-11-03)
 
 ### Bug Fixes
