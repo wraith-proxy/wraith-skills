@@ -185,3 +185,13 @@ Caveats from C10:
 - 133 `skills/cloud/` folders and the ads, analytics, developers and identity
   areas were not read. A later ADR must vet any of them before wraith names
   one.
+
+## Addendum 2026-11-03: pin bumped to 0c369ce
+
+Ticket: WSK-00014. The GCP pin moved from 92776fb to
+0c369ce1c8ab5f93b1d28752b8bea622b2eedcdc after a read-only re-vet of the 14
+changed skills (issue 19). No injection, destructive command or unexpected
+host was found. Accepted by the owner: the `agent-platform-*` skills gained a
+"Usage Attribution" block that tags gcloud environment variables and
+User-Agent headers with the skill name and version. It is opt-out and states
+that it carries no user data. wraith still never copies these skills (G21).
