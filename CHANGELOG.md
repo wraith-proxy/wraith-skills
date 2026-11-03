@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.6 (2026-11-03)
+
+### Bug Fixes
+
+- bump GCP companion pin to 0c369ce (#26)
+
 ## v0.5.5 (2026-11-03)
 
 ### Bug Fixes
