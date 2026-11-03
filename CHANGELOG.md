@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.5 (2026-11-03)
+
+### Bug Fixes
+
+- use default-branch HEAD when newest tag is older than the pin (#25)
+
 ## v0.5.4 (2026-11-03)
 
 ### Bug Fixes
