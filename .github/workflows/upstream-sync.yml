@@ -87,7 +87,7 @@ jobs:
           git commit --allow-empty -m "👻 fix/WSK-00010: sync upstream ${KEYS:-report only}"
           git push origin "$branch"
           url=$(gh pr create --head "$branch" \
-            --title "👻 fix/WSK-00010: sync upstream ${KEYS:-report only}" \
+            --title "👻 fix/WSK-00010: sync upstream ${KEYS:-report only} [automerge]" \
             --body-file sync-report.md)
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -108,20 +108,14 @@ jobs:
           claude plugin eval . --trust-plugin --ablation none \
             --tag trigger --max-cost-usd 5 || ok=false
           echo "ok=$ok" >> "$GITHUB_OUTPUT"
-      - name: Auto-merge or flag for review
-        if: steps.pr.outputs.url != ''
+      - name: Flag risky syncs
+        if: steps.pr.outputs.url != '' && (steps.sync.outputs.code != '10' || steps.evals.outputs.ok == 'false')
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           PR_URL: ${{ steps.pr.outputs.url }}
-          CODE: ${{ steps.sync.outputs.code }}
-          EVALS_OK: ${{ steps.evals.outputs.ok }}
         run: |
-          if [ "$CODE" = 10 ] && [ "$EVALS_OK" = true ]; then
-            gh pr merge --auto --squash "$PR_URL"
-          else
-            gh label create needs-review --color d93f0b --force
-            gh pr edit "$PR_URL" --add-label needs-review
-          fi
+          gh label create needs-review --color d93f0b --force
+          gh pr edit "$PR_URL" --add-label needs-review
       - name: Companion drift issues
         if: steps.sync.outputs.drift == 'true'
         env:
