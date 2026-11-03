@@ -7,5 +7,6 @@
   "homepage": "https://github.com/wraith-proxy/wraith-skills",
   "repository": "https://github.com/wraith-proxy/wraith-skills",
   "license": "MIT",
+  "icon": "./assets/icon.png",
   "keywords": ["data-engineering", "gcp", "bigquery", "dbt", "cloud-run", "terraform", "odcs", "data-contracts", "ontology", "agents"]
 }
