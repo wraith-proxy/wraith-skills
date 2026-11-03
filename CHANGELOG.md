@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.4 (2026-11-03)
+
+### Bug Fixes
+
+- sync PRs carry , ci merges on green (#24)
+- sync upstream report only (#23)
+
 ## v0.5.3 (2026-11-02)
 
 ### Bug Fixes
