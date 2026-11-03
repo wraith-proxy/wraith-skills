@@ -5,6 +5,7 @@ set -eu
 cd "$(dirname "$0")/.."
 
 pins() {
+    if [ -n "${PINS_FILE:-}" ]; then cat "$PINS_FILE"; return; fi
     cat <<'PINS'
 SP https://github.com/obra/superpowers v7.0.1 2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
 MP https://github.com/mattpocock/skills v1.3.2 d1478fcb140db0b93c0c8df17bcfd311844749d0
@@ -63,7 +64,7 @@ fetch() {
 fetch_new() {
     out=$1
     mkdir -p "$out"
-    pins | while read -r key url _ref _sha; do
+    pins | while read -r key url _ref sha; do
         dir=$out/$key
         rm -rf "$dir"
         mkdir -p "$dir"
@@ -71,6 +72,12 @@ fetch_new() {
         git -C "$dir" remote add origin "$url"
         tag=$(git ls-remote --tags --refs --sort=-v:refname "$url" |
             head -n 1 | sed 's|.*refs/tags/||')
+        if [ -n "$tag" ]; then
+            git -C "$dir" fetch -q --filter=blob:none origin \
+                "refs/tags/$tag:refs/tags/$tag" "$sha"
+            git -C "$dir" merge-base --is-ancestor "$sha" "$tag^{commit}" ||
+                tag=
+        fi
         if [ -n "$tag" ]; then
             git -C "$dir" fetch -q --depth 1 origin tag "$tag"
         else
