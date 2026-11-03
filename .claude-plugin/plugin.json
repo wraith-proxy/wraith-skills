@@ -1,7 +1,7 @@
 {
   "name": "wraith",
   "displayName": "wraith",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies, run as a plan, build, review, ship sprint.",
   "author": {"name": "wraith-proxy", "url": "https://github.com/wraith-proxy"},
   "homepage": "https://github.com/wraith-proxy/wraith-skills",

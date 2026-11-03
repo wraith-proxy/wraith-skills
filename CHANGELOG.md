@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.8 (2026-11-03)
+
+### Bug Fixes
+
+- add plugin icon for the directory listing (#28)
+
 ## v0.5.7 (2026-11-03)
 
 ### Bug Fixes
