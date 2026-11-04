@@ -161,4 +161,4 @@ number. Report problems and propose changes as issues on GitHub.
 
 ---
 
-[Privacy](PRIVACY.md) | [Terms](TERMS.md) | [Support](SUPPORT.md) | [Security](SECURITY.md)
+[Privacy](PRIVACY.md) | [Terms](TERMS.md) | [Support](SUPPORT.md) | [Security](SECURITY.md) | [License (MIT)](LICENSE)
