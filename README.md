@@ -236,5 +236,6 @@ wraith builds on MIT-licensed work. Full notices are in
 
 Read [AGENTS.md](AGENTS.md) first. Commits use the format
 `👻 <type>/WSK-<5 digits>: <summary>`, where the type is `feature`, `fix`,
-`bug` or `break` and the ticket is the zero-padded GitHub issue number. Report
-problems and propose changes as issues on GitHub.
+`bug` or `break` (these four cut a release) or `docs`, `chore`, `ci`, `test`
+or `refactor` (no release), and the ticket is the zero-padded GitHub issue
+number. Report problems and propose changes as issues on GitHub.
