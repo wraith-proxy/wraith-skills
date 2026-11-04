@@ -5,7 +5,7 @@
 <h1 align="center">wraith</h1>
 
 <p align="center">
-  <em>Agents improvise. wraith makes them plan, review and prove it.</em>
+  <em>Agents don't hesitate before prod. wraith is the ghost that does.</em>
 </p>
 
 <p align="center">

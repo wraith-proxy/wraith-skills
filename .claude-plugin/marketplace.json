@@ -1,12 +1,12 @@
 {
   "name": "wraith-proxy",
-  "description": "Agents improvise. wraith makes them plan, review and prove it. Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies.",
+  "description": "Agents don't hesitate before prod. wraith is the ghost that does. Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies.",
   "owner": {"name": "wraith-proxy", "url": "https://github.com/wraith-proxy"},
   "plugins": [
     {
       "name": "wraith",
       "source": "./",
-      "description": "Agents improvise. wraith makes them plan, review and prove it. Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies."
+      "description": "Agents don't hesitate before prod. wraith is the ghost that does. Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies."
     }
   ]
 }
