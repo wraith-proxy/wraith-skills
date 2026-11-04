@@ -7,25 +7,11 @@ import re
 from pathlib import Path
 
 HEADING = "## What changes for you"
-PIN_LINE = "- Companion pins updated to reviewed refs"
 RELEASING = ("### Features", "### Breaking Changes")
 COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
-PIN_BUMP = re.compile(r"^- .*companion pin", re.IGNORECASE)
-
-
-def _group_pins(generated: str) -> str:
-    out: list[str] = []
-    for line in generated.splitlines():
-        if PIN_BUMP.match(line):
-            if PIN_LINE not in out:
-                out.append(PIN_LINE)
-        else:
-            out.append(line)
-    return "\n".join(out) + ("\n" if generated.endswith("\n") else "")
 
 
 def build_notes(generated: str, user_notes: str | None) -> str:
-    generated = _group_pins(generated)
     user = COMMENT.sub("", user_notes or "").strip()
     lines = generated.splitlines()
     if not user or not any(h in lines for h in RELEASING):
