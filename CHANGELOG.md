@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.9 (2026-11-04)
+
+### Bug Fixes
+
+- sync upstream report only (#29)
+
 ## v0.5.8 (2026-11-03)
 
 ### Bug Fixes

@@ -746,7 +746,7 @@ wheels = [
 
 [[package]]
 name = "wraith-skills"
-version = "0.5.8"
+version = "0.5.9"
 source = { virtual = "." }
 
 [package.dev-dependencies]
