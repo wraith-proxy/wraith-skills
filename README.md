@@ -38,7 +38,11 @@ is billed by the terabyte.
 - `orchestrating-agents`: runs a written plan one card at a time through fresh
   subagents, and checks each result.
 
-<!-- before/after image lands here after Card 4.2 -->
+<p align="center">
+  <img src="assets/before-after.png" width="640" alt="The same plan review with and without wraith: without finds 1 of 3 planted defects, with finds all 3">
+</p>
+
+<p align="center"><sub>Benchmark case p10, one run per arm (each the median of its 5). Source rows: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L57-L58">p10 in the results</a>.</sub></p>
 
 ## Install
 
