@@ -7,7 +7,7 @@ import pytest
 CASES = [
     ("terraform-destroy", "terraform destroy", "terraform plan"),
     (
-        "terraform-auto-approve",
+        "terraform-apply-unattended",
         "tofu apply -auto-approve",
         "terraform apply plan.out",
     ),
@@ -192,3 +192,91 @@ def test_allow_prints_nothing(tmp_path):
 
 def test_guard_internal_error_fails_open():
     assert _run("claude", "{not json") == (0, "")
+
+
+MCP_SAMPLES = {
+    "sql-destructive": {"sql": "DROP TABLE a"},
+    "dbt-full-refresh-mcp": {"full_refresh": True},
+    "dbt-prod-target": {"target": "prod"},
+}
+REWRITE_KEYS = {"updatedInput", "updated_input", "modifiedArgs"}
+
+
+def _keys(node):
+    if isinstance(node, dict):
+        for key, value in node.items():
+            yield key
+            yield from _keys(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from _keys(item)
+
+
+def _decision(data):
+    inner = data.get("hookSpecificOutput", data)
+    return inner["permissionDecision"]
+
+
+def _payloads(host, cwd):
+    shell = {"claude": "Bash", "copilot": "bash"}[host]
+    for label, bad, _ in CASES:
+        if host == "claude":
+            yield {
+                "tool_name": shell,
+                "tool_input": {"command": bad},
+                "cwd": cwd,
+            }
+        else:
+            yield {
+                "toolName": shell,
+                "toolArgs": {"command": bad},
+                "cwd": cwd,
+            }
+    if host == "claude":
+        for args in MCP_SAMPLES.values():
+            yield {
+                "tool_name": "mcp__x__y",
+                "tool_input": args,
+                "cwd": cwd,
+            }
+
+
+def test_every_pattern_every_mode_emits_only_ask_or_deny(tmp_path):
+    covered = {c[0] for c in CASES} | set(MCP_SAMPLES)
+    assert {label for label, _, _ in guard.PATTERNS} <= covered
+    emitted = 0
+    for host in ("claude", "copilot"):
+        for mode in guard.MODES:
+            for payload in _payloads(host, str(tmp_path)):
+                rc, out = _run(host, payload, {"WRAITH_GUARD": mode})
+                assert rc == 0
+                if mode == "off":
+                    assert out == ""
+                    continue
+                assert out != ""
+                data = json.loads(out)
+                assert _decision(data) in ("ask", "deny")
+                assert not REWRITE_KEYS & set(_keys(data))
+                emitted += 1
+    assert emitted > 0
+
+
+def test_render_refuses_anything_but_ask_or_deny():
+    for host in ("claude", "copilot"):
+        for decision in ("allow", "approve", "", None):
+            with pytest.raises(Exception):  # noqa: B017
+                guard.render(host, decision, "r")
+        for decision in ("ask", "deny"):
+            assert decision in guard.render(host, decision, "r")
+
+
+def test_main_prints_nothing_when_decision_is_allow(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        guard, "decide", lambda *a, **k: ("allow", "terraform-destroy")
+    )
+    payload = {
+        "tool_name": "Bash",
+        "tool_input": {"command": "terraform destroy"},
+        "cwd": str(tmp_path),
+    }
+    assert _run("claude", payload) == (0, "")

