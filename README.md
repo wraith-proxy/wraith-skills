@@ -15,7 +15,11 @@
   <img src="https://img.shields.io/github/actions/workflow/status/wraith-proxy/wraith-skills/ci.yml?branch=main&style=flat-square&label=ci" alt="CI status">
 </p>
 
-<!-- hero: 3 benchmark numbers land here after Card 3.3 -->
+<p align="center">
+  <img src="assets/numbers.png" width="640" alt="Plan review, planted problems found: with wraith 70.6% (127 of 180), without 52.2% (94 of 180)">
+</p>
+
+<p align="center"><sub>12 plan-review cases, 5 runs per arm, 3 planted problems each, judged by majority vote. Whiskers are Wilson 95% intervals. Source: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L64-L69">Totals in the results</a>.</sub></p>
 
 For data and platform engineers on GCP: dbt, BigQuery, Cloud Run, Terraform,
 ODCS contracts. Left alone, an agent improvises, and on BigQuery improvisation
@@ -157,4 +161,4 @@ number. Report problems and propose changes as issues on GitHub.
 
 ---
 
-[Privacy](PRIVACY.md) | [Terms](TERMS.md) | [Support](SUPPORT.md) | [Security](SECURITY.md)
+[Privacy](PRIVACY.md) | [Terms](TERMS.md) | [Support](SUPPORT.md) | [Security](SECURITY.md) | [License (MIT)](LICENSE)
