@@ -201,21 +201,32 @@ finish() {
 
 run_wizard() {
 
-TOTAL_STAGES=1
+TOTAL_STAGES=2
 
-banner "Stripe setup"
+banner "GCP Workload Identity Federation setup"
 
-# ── Example stage: replace with your real steps ───────────────────────────
-stage "Stripe: API keys"
-say "We'll grab your Stripe test keys and store them for local dev + CI."
-open_url "https://dashboard.stripe.com/test/apikeys"
-step "On the API keys page, copy the Publishable key (starts pk_test_)."
-ask STRIPE_PUBLISHABLE_KEY "Paste the publishable key:"
-step "Click 'Reveal test key' on the Secret key row, then copy it."
-ask_secret STRIPE_SECRET_KEY "Paste the secret key:"
-write_env STRIPE_PUBLISHABLE_KEY "$STRIPE_PUBLISHABLE_KEY"
-write_env STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"
-set_secret STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"   # CI needs this one
+# ── Example stages: replace with your real steps ──────────────────────────
+stage "GCP: create the workload identity pool"
+say "GitHub Actions will sign in to GCP without a stored key."
+open_url "https://console.cloud.google.com/iam-admin/workload-identity-pools"
+ask GCP_PROJECT_ID "GCP project ID (e.g. my-example-project):"
+ask WIF_POOL_ID "Pool ID to create (e.g. example-pool):"
+step "In a terminal where gcloud is signed in, run:"
+note "gcloud iam workload-identity-pools create $WIF_POOL_ID --project=$GCP_PROJECT_ID --location=global --display-name='Example pool'"
+confirm "Pool created?" || warn "Create the pool before the next stage."
+write_env GCP_PROJECT_ID "$GCP_PROJECT_ID"
+write_env WIF_POOL_ID "$WIF_POOL_ID"
+
+stage "GCP: create the GitHub provider"
+say "The provider trusts tokens issued by GitHub for one repository."
+ask GITHUB_REPO "GitHub repository (e.g. example-owner/example-repo):"
+step "Run:"
+note "gcloud iam workload-identity-pools providers create-oidc example-provider --project=$GCP_PROJECT_ID --location=global --workload-identity-pool=$WIF_POOL_ID --issuer-uri=https://token.actions.githubusercontent.com --attribute-mapping=google.subject=assertion.sub,attribute.repository=assertion.repository --attribute-condition=\"assertion.repository=='$GITHUB_REPO'\""
+step "Then read the provider's full resource name:"
+note "gcloud iam workload-identity-pools providers describe example-provider --project=$GCP_PROJECT_ID --location=global --workload-identity-pool=$WIF_POOL_ID --format='value(name)'"
+ask WIF_PROVIDER "Paste the resource name (projects/.../providers/example-provider):"
+write_env WIF_PROVIDER "$WIF_PROVIDER"
+set_var WIF_PROVIDER "$WIF_PROVIDER"   # a resource name, not a secret
 # ──────────────────────────────────────────────────────────────────────────
 
 finish
