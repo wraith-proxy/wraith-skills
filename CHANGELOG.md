@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.11 (2026-11-04)
+
+### Bug Fixes
+
+- wizard WIF example adds the workloadIdentityUser binding (#75)
+
 ## v0.5.10 (2026-11-04)
 
 ### Bug Fixes
