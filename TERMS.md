@@ -1,6 +1,6 @@
 # Terms of use
 
-Last updated: <HUMAN: date>
+Last updated: 4 November 2026
 
 wraith is open-source software released under the MIT License
 (see [LICENSE](LICENSE)). The license is the agreement that governs your use of
@@ -22,6 +22,7 @@ wraith. These terms summarise it and add practical points.
 7. **Changes.** These terms may change; changes are visible in the
    repository history.
 8. **Age.** wraith is not intended for anyone under 18.
-9. **Governing law.** <HUMAN: for example, the laws of England and Wales>.
 
-Contact: <HUMAN: contact address or "open an issue">.
+Contact: Open an issue at https://github.com/wraith-proxy/wraith-skills/issues,
+or for anything private, use the private report form at
+https://github.com/wraith-proxy/wraith-skills/security/advisories/new.

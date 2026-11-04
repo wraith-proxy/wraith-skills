@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated: <HUMAN: date>
+Last updated: 4 November 2026
 
 wraith is a plugin made of instructions (skills and agents) and two small
 local hook scripts. It has no server, no account and no analytics.
@@ -61,4 +61,6 @@ separate software with their own privacy terms.
 ## Changes and contact
 
 Changes to this page are visible in the repository history.
-Questions: <HUMAN: contact address or "open an issue">.
+Questions: open an issue at https://github.com/wraith-proxy/wraith-skills/issues,
+or for anything private, use the private report form at
+https://github.com/wraith-proxy/wraith-skills/security/advisories/new.
