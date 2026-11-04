@@ -109,7 +109,8 @@ See [PRIVACY.md](PRIVACY.md) for the full statement.
 ## Reference
 
 The full sprint, skills, agents and companions are in
-[docs/reference.md](docs/reference.md).
+[docs/reference.md](docs/reference.md). To see one sprint as committed files,
+read the [worked example](docs/example/README.md).
 
 ## Companions
 

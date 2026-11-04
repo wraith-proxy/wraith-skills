@@ -1,0 +1,69 @@
+apiVersion: v3.2.0
+kind: DataContract
+id: 7f0c2f64-3a1e-4c52-9d7b-2d1c5b6a8e10
+version: 1.0.0
+team: {name: storefront}
+customProperties:
+  - property: wraith.classifications
+    value: [public, internal, pii]
+schema:
+  - name: orders
+    physicalName: raw_orders
+    description: One row per customer order as recorded by the storefront at checkout time.
+    properties:
+      - name: order_id
+        physicalName: order_id
+        logicalType: string
+        physicalType: STRING
+        required: true
+        primaryKey: true
+        classification: internal
+        description: Stable identifier of the order, assigned at checkout and never reused.
+      - name: customer_email
+        physicalName: email
+        logicalType: string
+        physicalType: STRING
+        required: true
+        classification: pii
+        description: Email address the customer entered at checkout, used for the receipt.
+      - name: country
+        physicalName: ship_country
+        logicalType: string
+        physicalType: STRING
+        required: false
+        classification: internal
+        description: ISO 3166-1 alpha-2 code of the shipping country, empty for digital orders.
+      - name: currency
+        physicalName: currency
+        logicalType: string
+        physicalType: STRING
+        required: true
+        classification: internal
+        description: ISO 4217 currency code the order was charged in.
+      - name: amount_gross
+        physicalName: gross
+        logicalType: number
+        physicalType: NUMERIC
+        required: true
+        classification: internal
+        description: Order total before refunds, in the order currency, including tax and shipping.
+      - name: amount_refunded
+        physicalName: refunded
+        logicalType: number
+        physicalType: NUMERIC
+        required: true
+        classification: internal
+        description: Total refunded to the customer so far, in the order currency, zero if none.
+      - name: ordered_at
+        physicalName: created_ts
+        logicalType: timestamp
+        physicalType: TIMESTAMP
+        required: true
+        classification: internal
+        description: UTC moment the customer completed checkout for this order.
+slaProperties:
+  - property: freshness
+    value: 24
+    unit: h
+    element: orders.ordered_at
+    description: On breach the storefront team is told and the mart is marked stale.
