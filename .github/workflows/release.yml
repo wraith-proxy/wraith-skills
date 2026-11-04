@@ -40,6 +40,7 @@ jobs:
           bot_id="$(gh api "/users/${slug}[bot]" --jq .id)"
           git config user.name "${slug}[bot]"
           git config user.email "${bot_id}+${slug}[bot]@users.noreply.github.com"
+          prev="$(git describe --tags --abbrev=0)"
           before="$(uv run cz version --project)"
           uv run cz --no-raise 3,21 bump --yes --changelog \
             --changelog-to-stdout --git-output-to-stderr > notes.md
@@ -48,6 +49,12 @@ jobs:
             echo "no commits to bump"
             exit 0
           fi
+          user_args=()
+          if ! git diff --quiet "$prev" HEAD -- RELEASE_NOTES.md; then
+            user_args=(--user RELEASE_NOTES.md)
+          fi
+          uv run python scripts/release_notes.py --generated notes.md \
+            "${user_args[@]}" > final_notes.md
           git push origin HEAD:main "v$after"
           git push origin "v$after:refs/heads/release"
-          gh release create "v$after" --title "v$after" --notes-file notes.md
+          gh release create "v$after" --title "v$after" --notes-file final_notes.md
