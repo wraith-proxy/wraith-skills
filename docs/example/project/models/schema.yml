@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: raw_orders
+        loaded_at_field: created_ts
+        freshness:
+          error_after: {count: 24, period: hour}
+
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        data_tests: [not_null, unique]
+  - name: daily_revenue
+    description: Revenue in GBP per day per shipping country. Owned by finance-data.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [order_date, country]
+    columns:
+      - name: revenue_gbp
+        data_tests:
+          - dbt_utils.accepted_range: {min_value: 0}
