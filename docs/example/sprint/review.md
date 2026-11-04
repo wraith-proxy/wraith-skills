@@ -7,6 +7,7 @@ Checklist: contract matches models, personal data stays out, grain is tested, co
 
 ## Suggestions
 - `schema.yml` has no test that `amount_refunded <= amount_gross`. The plan's card 4 asks for it; add it as a singular test.
+- Plan card 4 also asks for a test that no email column reaches the mart; `schema.yml` has neither that nor the refund test yet.
 - `orders_other_currency` is a count, not money. The name is fine; say so in the model description.
 
 ## Nits
