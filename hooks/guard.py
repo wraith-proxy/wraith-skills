@@ -14,7 +14,7 @@ BOTH = ("shell", "mcp")
 PATTERNS = [
     ("terraform-destroy", SHELL, r"\b(terraform|tofu)\s+destroy\b"),
     (
-        "terraform-auto-approve",
+        "terraform-apply-unattended",
         SHELL,
         r"\b(terraform|tofu)\s+apply\b[^|;&]*-auto-approve",
     ),
@@ -152,6 +152,8 @@ def decide(kind, text, mode, extra):
 
 
 def render(host, decision, reason):
+    if decision not in ("ask", "deny"):
+        raise ValueError(f"refusing to emit decision {decision!r}")
     if host == "claude":
         return json.dumps(
             {

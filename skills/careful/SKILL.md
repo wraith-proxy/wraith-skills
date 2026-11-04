@@ -32,7 +32,7 @@ file so the whole team shares it.
 | Label | What it matches |
 |---|---|
 | terraform-destroy | Terraform or OpenTofu destroy |
-| terraform-auto-approve | Terraform or OpenTofu apply with auto-approve, skipping the plan review |
+| terraform-apply-unattended | Terraform or OpenTofu apply with auto-approve, skipping the plan review |
 | terraform-state-surgery | Removing or moving resources in Terraform or OpenTofu state |
 | gcloud-delete | Any gcloud command that deletes a resource |
 | storage-recursive-rm | Recursive removal of Cloud Storage objects with gcloud storage or gsutil |
