@@ -191,13 +191,15 @@ and `terraform-search-import`.
 
 ## What wraith runs, sends and stores
 
-wraith runs two local Python hooks. At session start it adds the wraith router text to the conversation. Before shell commands and MCP tool calls it checks the command against a list of destructive patterns and asks you, or blocks, depending on the guard mode.
+wraith runs two local Python hooks. At session start it adds the wraith router text to the conversation. Before shell commands it checks the command against a list of destructive patterns and asks you, or blocks, depending on the guard mode. In Claude Code the guard also checks MCP tool calls, reading their arguments as JSON; the Copilot CLI guard checks only `bash` and `powershell` commands.
 
-wraith sends nothing, fetches nothing, collects no telemetry and checks for no updates.
+The guard checks the pending command text locally and discards it. It stores nothing. wraith sends nothing, fetches nothing, collects no telemetry and checks for no updates.
 
-It reads `.wraith/guard-mode` and `.wraith/guard-patterns.txt` in your project if they exist.
+To choose its mode and extra patterns the guard reads the `WRAITH_GUARD` environment variable, and `.wraith/guard-mode` and `.wraith/guard-patterns.txt` in your project if they exist.
 
 Skills may suggest commands that download packages (for example `uvx check-jsonschema`); the agent runs them in the open.
+
+See [PRIVACY.md](PRIVACY.md) for the full statement.
 
 ## Requirements
 
@@ -239,3 +241,7 @@ Read [AGENTS.md](AGENTS.md) first. Commits use the format
 `bug` or `break` (these four cut a release) or `docs`, `chore`, `ci`, `test`
 or `refactor` (no release), and the ticket is the zero-padded GitHub issue
 number. Report problems and propose changes as issues on GitHub.
+
+---
+
+[Privacy](PRIVACY.md) | [Terms](TERMS.md) | [Support](SUPPORT.md) | [Security](SECURITY.md)
