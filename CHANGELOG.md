@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.10 (2026-11-04)
+
+### Bug Fixes
+
+- Claude directory review fixes (#47)
+
 ## v0.5.9 (2026-11-04)
 
 ### Bug Fixes
