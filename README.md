@@ -21,7 +21,11 @@ For data and platform engineers on GCP: dbt, BigQuery, Cloud Run, Terraform,
 ODCS contracts. Left alone, an agent improvises, and on BigQuery improvisation
 is billed by the terabyte.
 
-<!-- demo GIF of the guard lands here after Card 4.1 -->
+<p align="center">
+  <img src="assets/demo-careful.gif" width="640" alt="An agent tries bq rm -r -f and the wraith guard blocks it">
+</p>
+
+<p align="center"><sub>A real Claude Code run with the guard in <code>deny</code> mode (<code>WRAITH_GUARD=deny</code>). The default, <code>ask</code>, prompts you instead.</sub></p>
 
 ## Start here
 
