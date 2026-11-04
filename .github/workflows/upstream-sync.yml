@@ -84,10 +84,11 @@ jobs:
           branch="bot/upstream-sync-$(date -u +%Y%m%d)"
           git switch -c "$branch"
           git add -u
-          git commit --allow-empty -m "👻 fix/WSK-00010: sync upstream ${KEYS:-report only}"
+          type=$(git diff --name-only HEAD | uv run python scripts/sync_commit_type.py)
+          git commit --allow-empty -m "👻 $type/WSK-00010: sync upstream ${KEYS:-report only}"
           git push origin "$branch"
           url=$(gh pr create --head "$branch" \
-            --title "👻 fix/WSK-00010: sync upstream ${KEYS:-report only} [automerge]" \
+            --title "👻 $type/WSK-00010: sync upstream ${KEYS:-report only} [automerge]" \
             --body-file sync-report.md)
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
