@@ -227,6 +227,8 @@ note "gcloud iam workload-identity-pools providers describe example-provider --p
 ask WIF_PROVIDER "Paste the resource name (projects/.../providers/example-provider):"
 write_env WIF_PROVIDER "$WIF_PROVIDER"
 set_var WIF_PROVIDER "$WIF_PROVIDER"   # a resource name, not a secret
+step "Last, let the repository act as your deploy service account:"
+note "gcloud iam service-accounts add-iam-policy-binding <deploy-sa-email> --project=$GCP_PROJECT_ID --role=roles/iam.workloadIdentityUser --member=principalSet://iam.googleapis.com/projects/<project-number>/locations/global/workloadIdentityPools/$WIF_POOL_ID/attribute.repository/$GITHUB_REPO"
 # ──────────────────────────────────────────────────────────────────────────
 
 finish
