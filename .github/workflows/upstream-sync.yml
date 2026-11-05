@@ -88,7 +88,7 @@ jobs:
           git commit --allow-empty -m "👻 $type/WSK-00010: sync upstream ${KEYS:-report only}"
           git push origin "$branch"
           url=$(gh pr create --head "$branch" \
-            --title "👻 $type/WSK-00010: sync upstream ${KEYS:-report only} [automerge]" \
+            --title "👻 $type/WSK-00010: sync upstream ${KEYS:-report only}" \
             --body-file sync-report.md)
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -117,6 +117,35 @@ jobs:
         run: |
           gh label create needs-review --color d93f0b --force
           gh pr edit "$PR_URL" --add-label needs-review
+      - name: Enable auto-merge on safe syncs
+        if: steps.pr.outputs.url != '' && steps.sync.outputs.code == '10' && steps.evals.outputs.ok != 'false'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: |
+          # Native auto-merge only waits for checks that main requires, so
+          # enable it only while a ruleset requires one (settings in #84).
+          # Otherwise the PR waits for review instead of merging unchecked.
+          required="$(gh api "repos/$GITHUB_REPOSITORY/rules/branches/main" \
+            --jq '[.[] | select(.type == "required_status_checks")] | length' \
+            || echo 0)"
+          id="$(gh pr view "$PR_URL" --json id --jq .id)"
+          headline="$(gh pr view "$PR_URL" --json title,number \
+            --jq '"\(.title) (#\(.number))"')"
+          if [ "$required" -gt 0 ] && gh api graphql -f id="$id" \
+            -f headline="$headline" -f query='
+            mutation($id: ID!, $headline: String!) {
+              enablePullRequestAutoMerge(input: {
+                pullRequestId: $id, mergeMethod: SQUASH,
+                commitHeadline: $headline
+              }) { clientMutationId }
+            }'; then
+            echo "auto-merge enabled; GitHub merges once test passes"
+          else
+            echo "auto-merge not enabled; leaving the PR for review"
+            gh label create needs-review --color d93f0b --force
+            gh pr edit "$PR_URL" --add-label needs-review
+          fi
       - name: Companion drift issues
         if: steps.sync.outputs.drift == 'true'
         env:

@@ -32,18 +32,25 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          if git diff --quiet "$(git describe --tags --abbrev=0)" HEAD; then
+          prev="$(git describe --tags --abbrev=0)"
+          if git diff --quiet "$prev" HEAD; then
             echo "no file changes since last release"
+            exit 0
+          fi
+          # Subjects only: commitizen also reads bodies (issue #78).
+          increment="$(git log --format=%s "$prev"..HEAD \
+            | uv run python scripts/release_gate.py)"
+          if [ "$increment" = NONE ]; then
+            echo "no releasing commit subjects since $prev"
             exit 0
           fi
           slug="${{ steps.app.outputs.app-slug }}"
           bot_id="$(gh api "/users/${slug}[bot]" --jq .id)"
           git config user.name "${slug}[bot]"
           git config user.email "${bot_id}+${slug}[bot]@users.noreply.github.com"
-          prev="$(git describe --tags --abbrev=0)"
           before="$(uv run cz version --project)"
-          uv run cz --no-raise 3,21 bump --yes --changelog \
-            --changelog-to-stdout --git-output-to-stderr > notes.md
+          uv run cz --no-raise 3,21 bump --yes --increment "$increment" \
+            --changelog --changelog-to-stdout --git-output-to-stderr > notes.md
           after="$(uv run cz version --project)"
           if [ "$before" = "$after" ]; then
             echo "no commits to bump"
