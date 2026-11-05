@@ -111,3 +111,16 @@ and are not installed by these commands.
 - The companion is optional. Every wraith skill works with it absent and
   says so.
 - If the pinned ref moves, this ADR is re-run before the pointers change.
+
+## Addendum 2026-11-05: pin bumped to 5e30fa5
+
+Ticket: WSK-00081. The TF pin moved from bc6b14b to
+5e30fa5c867ba6777c37e4206babfd08049c396f, one upstream commit ("add Agent
+Plugins root manifests"). No `SKILL.md` and no file in a skill folder
+changed. The commit adds a root `plugin.json` for the terraform and packer
+plugins and edits README, AGENTS.md and CHANGELOG text. The terraform
+manifest holds metadata only (name, version, author, links, license,
+keywords). The packer manifest adds display text for another host. Neither
+declares hooks, MCP servers or commands, and the install commands above do
+not install packer. Verdicts unchanged. The owner accepts the bump by
+merging it.
