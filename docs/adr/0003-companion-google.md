@@ -195,3 +195,26 @@ host was found. Accepted by the owner: the `agent-platform-*` skills gained a
 "Usage Attribution" block that tags gcloud environment variables and
 User-Agent headers with the skill name and version. It is opt-out and states
 that it carries no user data. wraith still never copies these skills (G21).
+
+## Addendum 2026-11-05: pin bumped to f70aa02
+
+Ticket: WSK-00080. The GCP pin moved from 0c369ce to
+f70aa02c5e8d1360169af143f4bfc0af68d73012. Sixteen skills changed upstream;
+one of them is named under Decision: `dbt-sf-to-bq-translator` (upstream
+commit 0f2afff, version 1.1.2 to 1.1.3). Its whole folder was read:
+`SKILL.md`, `references/dbt_migration_patterns.md` and
+`scripts/dbt_translator.py`.
+
+- Cast semantics now match Snowflake one to one. `CAST` and `::TYPE`
+  become `CAST`, which fails on bad data; only `TRY_CAST` and `TRY_TO_*`
+  become `SAFE_CAST`. Before, every cast was a `SAFE_CAST`, which turns
+  malformed keys into `NULL` without a word. The skill now agrees with
+  "Fail loud, not silent".
+- The script gains regex rewrites from `TRY_CAST` to `SAFE_CAST`. Its
+  imports are unchanged, and the added lines add no command, host,
+  network call or telemetry.
+- The other fifteen changed skills are not named by wraith and were not
+  read, as above.
+
+Verdict unchanged: recommend with caveat, migration work only. The owner
+accepts the bump by merging it.
