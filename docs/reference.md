@@ -152,4 +152,5 @@ and `terraform-search-import`.
 - `npx skills` may install into `.agents/skills/`, which Claude Code may not read. Check where the files landed. Copilot reads `.github/skills/`, `.claude/skills/` and `.agents/skills/`.
 - Google marks its skills as under active development. Keep them away from production without a plan review (wraith:plan-infra-review).
 - wraith reviewed these companions at the refs recorded in docs/adr/0002 to 0004. Newer versions have not been reviewed by this project.
+- When a skill wraith names changes upstream, the nightly sync opens a `re-vet` issue and the bot drafts a pull request with the pin bump, the diff, an automated scan and a machine read by a model with no tools. Nothing merges it automatically: the maintainer's merge is the review.
 - MCP servers (dbt, Google) are set up per project with the vendors' own skills.

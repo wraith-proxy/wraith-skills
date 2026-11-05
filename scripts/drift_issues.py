@@ -4,7 +4,9 @@ Reads the drift section of sync-report.md and the repository's issues
 (`gh issue list --state all --json number,title,state,body`). For each
 companion with drift it writes body-<KEY>.md and prints one action:
 
-- `edit KEY N`: an open `re-vet KEY` issue exists; refresh its body.
+- `keep KEY N`: an open `re-vet KEY` issue already shows this drift
+  fingerprint; leave it alone, and do not re-vet it again (#95).
+- `edit KEY N`: an open `re-vet KEY` issue shows older drift; refresh it.
 - `skip KEY N`: a closed `re-vet KEY` issue already carries this drift
   fingerprint, so the owner has seen these exact changes; leave it closed.
 - `create KEY`: open a new `re-vet KEY` issue.
@@ -39,10 +41,11 @@ def fingerprint(body: str) -> str | None:
 
 def decide(key: str, body: str, issues: list[dict]) -> tuple[str, int | None]:
     mine = [i for i in issues if i.get("title") == f"re-vet {key}"]
+    seen = fingerprint(body)
     for item in mine:
         if item.get("state") == "OPEN":
-            return "edit", item["number"]
-    seen = fingerprint(body)
+            same = bool(seen) and seen in (item.get("body") or "")
+            return ("keep" if same else "edit"), item["number"]
     if seen:
         for item in mine:
             if item.get("state") == "CLOSED" and seen in (

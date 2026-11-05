@@ -13,6 +13,8 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-24.04
+    outputs:
+      vet: ${{ steps.drift.outputs.vet }}
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -149,23 +151,153 @@ jobs:
             gh pr edit "$PR_URL" --add-label needs-review
           fi
       - name: Companion drift issues
+        id: drift
         if: steps.sync.outputs.drift == 'true'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
           # A closed re-vet issue whose drift fingerprint matches stays
-          # closed: the owner has seen these exact changes (#91).
+          # closed: the owner has seen these exact changes (#91). New or
+          # changed drift is queued for the vet and propose jobs (#95).
           gh issue list --state all --limit 500 \
             --json number,title,state,body > issues.json
           uv run python scripts/drift_issues.py --report sync-report.md \
             --issues issues.json --out . > actions.txt
+          : > vet.txt
           while read -r action key number; do
+            sha=$(git -C ".upstream-new/$key" rev-parse HEAD)
             case "$action" in
-              edit) gh issue edit "$number" --body-file "body-$key.md" ;;
+              keep) echo "re-vet $key: #$number already shows this drift" ;;
+              edit)
+                gh issue edit "$number" --body-file "body-$key.md"
+                echo "$key $number $sha" >> vet.txt
+                ;;
               create)
-                gh issue create --title "re-vet $key" \
-                  --body-file "body-$key.md"
+                url=$(gh issue create --title "re-vet $key" \
+                  --body-file "body-$key.md")
+                echo "$key ${url##*/} $sha" >> vet.txt
                 ;;
               skip) echo "re-vet $key: closed in #$number, not reopened" ;;
             esac
           done < actions.txt
+          vet=$(jq -cnR '[inputs | select(length > 0) | split(" ")
+            | {key: .[0], issue: (.[1] | tonumber), sha: .[2]}]' < vet.txt)
+          echo "vet=$vet" >> "$GITHUB_OUTPUT"
+
+  # Machine read of a re-vet (#95). No write token reaches this job, and
+  # the model runs with no tools: it sees the diff as text and answers with
+  # JSON that scripts/vet_companion.py checks before anything uses it.
+  vet:
+    needs: sync
+    if: needs.sync.outputs.vet != '' && needs.sync.outputs.vet != '[]'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.sync.outputs.vet) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --locked
+      - name: Bundle the named-skill diff
+        env:
+          KEY: ${{ matrix.target.key }}
+          SHA: ${{ matrix.target.sha }}
+        run: |
+          vet="uv run python scripts/vet_companion.py"
+          $vet fetch --key "$KEY" --dest vet/old
+          $vet fetch --key "$KEY" --sha "$SHA" --dest vet/new
+          $vet bundle --key "$KEY" --old vet/old --new vet/new --out vet/bundle
+          $vet prompt --bundle vet/bundle > vet/prompt.txt
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Machine read
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY not set; the re-vet stays unread"
+            exit 0
+          fi
+          npm install -g @anthropic-ai/claude-code@2.1.316
+          cd vet
+          claude -p --bare --tools "" --no-session-persistence \
+            --output-format json --model claude-sonnet-5-5 \
+            --max-budget-usd 1 < prompt.txt > raw.json \
+            || echo "machine read failed; the re-vet stays unread"
+      - name: Check the verdict
+        run: |
+          uv run python scripts/vet_companion.py verdict \
+            --bundle vet/bundle --raw vet/raw.json
+          cat vet/bundle/verdict.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vet-${{ matrix.target.key }}
+          path: vet/bundle
+
+  # Turns the verdict into a pin bump and an ADR addendum, then opens or
+  # refreshes the re-vet PR. Never merged here: the owner's merge is the
+  # acceptance (#95).
+  propose:
+    needs: [sync, vet]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.sync.outputs.vet) }}
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          # v3.3.0 reads client-id || app-id as the JWT issuer, so the App
+          # ID works here unchanged; app-id is deprecated (#87).
+          client-id: ${{ secrets.WRAITH_BOT_APP_ID }}
+          private-key: ${{ secrets.WRAITH_BOT_PRIVATE_KEY }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ steps.app.outputs.token }}
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --locked
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: vet-${{ matrix.target.key }}
+          path: vet/bundle
+      - name: Open or refresh the re-vet PR
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+          KEY: ${{ matrix.target.key }}
+          ISSUE: ${{ matrix.target.issue }}
+        run: |
+          branch="bot/re-vet-$KEY"
+          git switch -C "$branch"
+          title=$(uv run python scripts/vet_companion.py apply \
+            --bundle vet/bundle --ticket "$ISSUE" --root . \
+            --pr-body pr-body.md)
+          if [ -z "$title" ]; then
+            echo "no named-skill drift against the pin; nothing to propose"
+            exit 0
+          fi
+          bot_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${bot_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          git add scripts/fetch_upstream.sh docs/adr
+          git commit -q -m "$title"
+          git push --force origin "$branch"
+          gh label create needs-review --color d93f0b --force
+          number=$(gh pr list --head "$branch" --state open \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$title" --body-file pr-body.md \
+              --add-label needs-review
+          else
+            gh pr create --head "$branch" --title "$title" \
+              --body-file pr-body.md --label needs-review
+          fi
