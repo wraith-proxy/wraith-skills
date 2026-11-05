@@ -24,5 +24,7 @@ It serves Claude Code and GitHub Copilot from one repository.
 - Commit format `👻 <type>/WSK-<5 digits>: <summary>`, types `feature`,
   `fix`, `bug`, `break` (these four release) and `docs`, `chore`, `ci`,
   `test`, `refactor` (no release). No attribution trailers, never `--no-verify`.
+  PR titles use the same format: the squash subject decides the release,
+  and CI rejects a title that does not match.
 - No private data: personal emails, private IPs, internal hostnames, home
   paths, employer or client names, credentials.

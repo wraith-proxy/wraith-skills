@@ -217,6 +217,8 @@ Read [AGENTS.md](AGENTS.md) first. Commits use the format
 `bug` or `break` (these four cut a release) or `docs`, `chore`, `ci`, `test`
 or `refactor` (no release), and the ticket is the zero-padded GitHub issue
 number. Only the subject line decides a release; commit bodies are ignored.
+PR titles use the same format, because the title becomes the squash subject,
+and CI rejects one that does not match.
 Report problems and propose changes as issues on GitHub.
 
 ## Star history

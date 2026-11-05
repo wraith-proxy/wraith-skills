@@ -36,8 +36,21 @@ def test_ci_has_only_the_test_job():
     assert list(yaml.safe_load(text("ci.yml"))["jobs"]) == ["test"]
 
 
-def test_ci_does_not_rerun_on_pr_edits():
-    assert "edited" not in text("ci.yml")
+def test_ci_reruns_when_a_pr_title_is_edited():
+    # PyYAML reads the workflow's `on:` key as the boolean True.
+    on = yaml.safe_load(text("ci.yml"))[True]
+    assert "edited" in on["pull_request"]["types"]
+
+
+def test_test_job_checks_the_pr_title_before_anything_slow():
+    steps = yaml.safe_load(text("ci.yml"))["jobs"]["test"]["steps"]
+    runs = [s.get("run", "") for s in steps]
+    title = steps[runs.index('uv run cz check --message "$TITLE"')]
+    assert title["if"] == "github.event_name == 'pull_request'"
+    assert title["env"]["TITLE"] == "${{ github.event.pull_request.title }}"
+    pre_commit = "uv run pre-commit run --all-files --show-diff-on-failure"
+    assert runs.index("uv sync --locked") < steps.index(title)
+    assert steps.index(title) < runs.index(pre_commit)
 
 
 @pytest.mark.parametrize("name", ["ci.yml", "upstream-sync.yml"])

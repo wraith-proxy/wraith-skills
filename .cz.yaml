@@ -44,4 +44,4 @@ commitizen:
         type: input
         message: "Enter a brief description:"
     schema: '<type>/<ticket>: <body>'
-    schema_pattern: '^.*(feature|fix|bug|break|docs|chore|ci|test|refactor)/WSK-\d{5}: (.*)'
+    schema_pattern: '^👻 (feature|fix|bug|break|docs|chore|ci|test|refactor)/WSK-\d{5}: (.+)'
