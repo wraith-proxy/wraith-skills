@@ -277,47 +277,56 @@ def _files(root: Path, rel_dir: str) -> set[str]:
     }
 
 
-def _companion_drift(old: Path, new: Path) -> dict[str, Drift]:
-    """Report changes to the companion skills wraith names (#91).
+def key_drift(key: str, old: Path, new: Path) -> tuple[Drift | None, str]:
+    """Drift and the combined diff for one companion's two checkouts.
 
     Every file in a named skill's folder counts, scripts included. The
     fingerprint hashes the changed files' new content, so it moves only
-    when a named skill changes, not when the rest of the repo does.
+    when a named skill changes, not when the rest of the repo does (#91).
     """
+    dirs = _named_dirs(old, key) | _named_dirs(new, key)
+    files: set[str] = set()
+    for rel_dir in dirs:
+        files |= _files(old, rel_dir) | _files(new, rel_dir)
+    rows = []
+    diffs = []
+    digest = hashlib.sha256()
+    for rel in sorted(files):
+        before = _bytes(old / rel)
+        after = _bytes(new / rel)
+        if before == after:
+            continue
+        if after is None:
+            status = "removed"
+        elif before is None:
+            status = "added"
+        else:
+            status = "changed"
+        diff = _diff(
+            (before or b"").decode("utf-8", "replace"),
+            (after or b"").decode("utf-8", "replace"),
+            rel,
+        )
+        rows.append(Row(rel, status, risk_scan(diff)))
+        diffs.append(diff)
+        digest.update(rel.encode() + b"\0")
+        digest.update(b"\0removed" if after is None else after)
+        digest.update(b"\0")
+    if not rows:
+        return None, ""
+    return Drift(rows, digest.hexdigest()), "".join(diffs)
+
+
+def _companion_drift(old: Path, new: Path) -> dict[str, Drift]:
     drift: dict[str, Drift] = {}
     for key in COMPANIONS:
         if not (new / key).is_dir():
             continue
         if _sha(old / key) == _sha(new / key):
             continue
-        dirs = _named_dirs(old / key, key) | _named_dirs(new / key, key)
-        files: set[str] = set()
-        for rel_dir in dirs:
-            files |= _files(old / key, rel_dir) | _files(new / key, rel_dir)
-        rows = []
-        digest = hashlib.sha256()
-        for rel in sorted(files):
-            before = _bytes(old / key / rel)
-            after = _bytes(new / key / rel)
-            if before == after:
-                continue
-            if after is None:
-                status = "removed"
-            elif before is None:
-                status = "added"
-            else:
-                status = "changed"
-            diff = _diff(
-                (before or b"").decode("utf-8", "replace"),
-                (after or b"").decode("utf-8", "replace"),
-                rel,
-            )
-            rows.append(Row(rel, status, risk_scan(diff)))
-            digest.update(rel.encode() + b"\0")
-            digest.update(b"\0removed" if after is None else after)
-            digest.update(b"\0")
-        if rows:
-            drift[key] = Drift(rows, digest.hexdigest())
+        found, _ = key_drift(key, old / key, new / key)
+        if found:
+            drift[key] = found
     return drift
 
 

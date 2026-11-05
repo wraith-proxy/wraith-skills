@@ -48,6 +48,17 @@ def test_open_issue_is_edited():
     assert decide("GCP", body, issues) == ("edit", 9)
 
 
+def test_open_issue_with_the_same_fingerprint_is_kept():
+    body = sections(REPORT)["GCP"]
+    assert decide("GCP", body, [issue(9, "OPEN", body)]) == ("keep", 9)
+
+
+def test_open_legacy_issue_without_fingerprint_is_edited():
+    body = sections(REPORT)["GCP"]
+    legacy = issue(80, "OPEN", "### GCP\n\nNo SKILL.md changes.\n")
+    assert decide("GCP", body, [legacy]) == ("edit", 80)
+
+
 def test_closed_issue_with_the_same_fingerprint_is_not_reopened():
     body = sections(REPORT)["GCP"]
     assert decide("GCP", body, [issue(7, "CLOSED", body)]) == ("skip", 7)
