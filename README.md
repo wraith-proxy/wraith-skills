@@ -1,9 +1,5 @@
 <p align="center">
-  <img src="assets/social-preview.png" width="720" alt="wraith. Agents improvise. wraith makes them plan, review and prove it. Skills and agents for dbt, BigQuery, Cloud Run and Terraform on GCP.">
-</p>
-
-<p align="center">
-  <em>Agents don't hesitate before prod. wraith is the ghost that does.</em>
+  <img src="assets/social-preview.png" width="720" alt="wraith. Agents don't hesitate before prod. wraith is the ghost that does. Skills and agents for dbt, BigQuery, Cloud Run and Terraform on GCP.">
 </p>
 
 <p align="center">
