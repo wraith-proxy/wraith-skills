@@ -105,3 +105,24 @@ def test_auto_merge_needs_a_required_check_or_waits_for_review(
     assert result.returncode == 0
     assert ("auto-merge enabled" in result.stdout) is enabled
     assert ("--add-label needs-review" in log.read_text()) is not enabled
+
+
+def app_token_steps():
+    for path in sorted(WORKFLOWS.glob("*.yml")):
+        jobs = yaml.safe_load(path.read_text(encoding="utf-8"))["jobs"]
+        for job in jobs.values():
+            for step in job.get("steps", []):
+                uses = step.get("uses", "")
+                if uses.startswith("actions/create-github-app-token@"):
+                    yield path.name, step
+
+
+def test_app_token_steps_use_client_id_not_deprecated_app_id():
+    found = list(app_token_steps())
+    assert sorted(name for name, _ in found) == [
+        "release.yml",
+        "upstream-sync.yml",
+    ]
+    for _, step in found:
+        assert "app-id" not in step["with"]
+        assert step["with"]["client-id"] == "${{ secrets.WRAITH_BOT_APP_ID }}"
