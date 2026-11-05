@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: read
@@ -25,30 +24,3 @@ jobs:
           node-version: 22
       - run: npm install -g @anthropic-ai/claude-code@2.1.316
       - run: claude plugin validate --strict .
-
-  # ponytail: private repo on GitHub Free has no native auto-merge or
-  # required checks; this job is the gate. Merges made with GITHUB_TOKEN
-  # do not trigger push runs on main, so it dispatches release.yml itself.
-  automerge:
-    needs: test
-    if: >-
-      github.event_name == 'pull_request' &&
-      !github.event.pull_request.draft &&
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      contains(github.event.pull_request.title, '[automerge]')
-    runs-on: ubuntu-24.04
-    permissions:
-      actions: write
-      contents: write
-      pull-requests: write
-    steps:
-      - run: |
-          subject="$(printf '%s' "$TITLE" | sed 's/ *\[automerge\] */ /g; s/^ *//; s/ *$//') (#$PR)"
-          gh pr merge "$PR" --squash --match-head-commit "$SHA" \
-            --subject "$subject" --repo "$GITHUB_REPOSITORY"
-          gh workflow run release.yml --ref main --repo "$GITHUB_REPOSITORY"
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR: ${{ github.event.pull_request.number }}
-          SHA: ${{ github.event.pull_request.head.sha }}
-          TITLE: ${{ github.event.pull_request.title }}
