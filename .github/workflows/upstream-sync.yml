@@ -153,16 +153,19 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          sed -n '/^## Companion drift/,$p' sync-report.md > drift.md
-          for key in $(sed -n 's/^### //p' drift.md); do
-            sed -n "/^### $key\$/,/^### /p" drift.md | sed '${/^### /d}' > "body-$key.md"
-            title="re-vet $key"
-            num=$(gh issue list --state open --search "$title in:title" \
-              --json number,title \
-              --jq "[.[] | select(.title == \"$title\")][0].number // empty")
-            if [ -n "$num" ]; then
-              gh issue edit "$num" --body-file "body-$key.md"
-            else
-              gh issue create --title "$title" --body-file "body-$key.md"
-            fi
-          done
+          # A closed re-vet issue whose drift fingerprint matches stays
+          # closed: the owner has seen these exact changes (#91).
+          gh issue list --state all --limit 500 \
+            --json number,title,state,body > issues.json
+          uv run python scripts/drift_issues.py --report sync-report.md \
+            --issues issues.json --out . > actions.txt
+          while read -r action key number; do
+            case "$action" in
+              edit) gh issue edit "$number" --body-file "body-$key.md" ;;
+              create)
+                gh issue create --title "re-vet $key" \
+                  --body-file "body-$key.md"
+                ;;
+              skip) echo "re-vet $key: closed in #$number, not reopened" ;;
+            esac
+          done < actions.txt

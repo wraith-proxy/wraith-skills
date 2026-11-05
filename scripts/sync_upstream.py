@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import hashlib
 import re
 import subprocess
 import sys
@@ -12,6 +13,61 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 COMPANIONS = ("DBT", "GCP", "TF")
+# The companion skills wraith names, from the Decision sections of
+# docs/adr/0002 to 0004. Drift anywhere else in a vendor repo is out of
+# scope: wraith never vetted those skills and never points to them (#91).
+# The context-engineering skills named in ADR 0003 live in a repo this
+# sync does not fetch, so they are not listed here.
+NAMED = {
+    "DBT": frozenset(
+        {
+            "running-dbt-commands",
+            "using-dbt-for-analytics-engineering",
+            "adding-dbt-unit-test",
+            "maintaining-dbt-documentation",
+            "building-dbt-semantic-layer",
+            "creating-mermaid-dbt-dag",
+            "working-with-dbt-mesh",
+        }
+    ),
+    "GCP": frozenset(
+        {
+            "bigquery-basics",
+            "bigquery-optimization",
+            "bigquery-troubleshooting",
+            "bigquery-observability",
+            "bigquery-ai-ml",
+            "bigquery-udfs",
+            "datalineage-summary",
+            "datalineage-bigquery-asset-impact-analysis",
+            "cloud-logging-query-generation",
+            "dbt-sf-to-bq-translator",
+            "bigquery-migration-sql-translator",
+            "cloud-run-basics",
+            "cloud-build-basics",
+            "cloud-run-alert-configuration",
+            "google-cloud-slo-alert-configuration",
+            "google-cloud-waf-security",
+            "iam-helper-for-troubleshooting",
+            "iam-helper-for-policy-simulator",
+            "iam-helper-for-policy-management",
+            "iam-helper-for-privileged-access-management",
+            "google-cloud-recipe-auth",
+            "google-cloud-waf-reliability",
+            "google-cloud-waf-cost-optimization",
+            "google-cloud-waf-operational-excellence",
+            "gcloud",
+        }
+    ),
+    "TF": frozenset(
+        {
+            "terraform-style-guide",
+            "terraform-test",
+            "refactor-module",
+            "terraform-search-import",
+        }
+    ),
+}
 SKIP_DIRS = {".git", ".upstream", ".venv", "node_modules"}
 
 RISK_PATTERNS = {
@@ -128,6 +184,10 @@ def _read(path: Path) -> str | None:
         return None
 
 
+def _bytes(path: Path) -> bytes | None:
+    return path.read_bytes() if path.is_file() else None
+
+
 def _diff(old: str, new: str, name: str) -> str:
     return "".join(
         difflib.unified_diff(
@@ -144,6 +204,12 @@ class Row:
     path: str
     status: str
     hits: list[str] = field(default_factory=list)
+
+
+@dataclass
+class Drift:
+    rows: list[Row]
+    fingerprint: str
 
 
 @dataclass
@@ -189,24 +255,69 @@ def _sync_file(
     return Row(rel, "clean", hits), change
 
 
-def _companion_drift(old: Path, new: Path) -> dict[str, list[Row]]:
-    drift: dict[str, list[Row]] = {}
+def _named_dirs(root: Path, key: str) -> set[str]:
+    if not root.is_dir():
+        return set()
+    found = set()
+    for path in root.rglob("SKILL.md"):
+        rel = path.parent.relative_to(root)
+        if ".git" not in rel.parts and rel.name in NAMED[key]:
+            found.add(rel.as_posix())
+    return found
+
+
+def _files(root: Path, rel_dir: str) -> set[str]:
+    base = root / rel_dir
+    if not base.is_dir():
+        return set()
+    return {
+        path.relative_to(root).as_posix()
+        for path in base.rglob("*")
+        if path.is_file() and ".git" not in path.relative_to(root).parts
+    }
+
+
+def _companion_drift(old: Path, new: Path) -> dict[str, Drift]:
+    """Report changes to the companion skills wraith names (#91).
+
+    Every file in a named skill's folder counts, scripts included. The
+    fingerprint hashes the changed files' new content, so it moves only
+    when a named skill changes, not when the rest of the repo does.
+    """
+    drift: dict[str, Drift] = {}
     for key in COMPANIONS:
         if not (new / key).is_dir():
             continue
         if _sha(old / key) == _sha(new / key):
             continue
+        dirs = _named_dirs(old / key, key) | _named_dirs(new / key, key)
+        files: set[str] = set()
+        for rel_dir in dirs:
+            files |= _files(old / key, rel_dir) | _files(new / key, rel_dir)
         rows = []
-        for path in sorted((new / key).rglob("SKILL.md")):
-            rel = path.relative_to(new / key)
-            if ".git" in rel.parts:
+        digest = hashlib.sha256()
+        for rel in sorted(files):
+            before = _bytes(old / key / rel)
+            after = _bytes(new / key / rel)
+            if before == after:
                 continue
-            before = _read(old / key / rel) or ""
-            after = _read(path) or ""
-            if before != after:
-                diff = _diff(before, after, rel.as_posix())
-                rows.append(Row(rel.as_posix(), "changed", risk_scan(diff)))
-        drift[key] = rows
+            if after is None:
+                status = "removed"
+            elif before is None:
+                status = "added"
+            else:
+                status = "changed"
+            diff = _diff(
+                (before or b"").decode("utf-8", "replace"),
+                (after or b"").decode("utf-8", "replace"),
+                rel,
+            )
+            rows.append(Row(rel, status, risk_scan(diff)))
+            digest.update(rel.encode() + b"\0")
+            digest.update(b"\0removed" if after is None else after)
+            digest.update(b"\0")
+        if rows:
+            drift[key] = Drift(rows, digest.hexdigest())
     return drift
 
 
@@ -218,7 +329,7 @@ def _report(
     pins: list[tuple[str, str, str, str]],
     rows: list[Row],
     changes: dict[str, Change],
-    drift: dict[str, list[Row]],
+    drift: dict[str, Drift],
 ) -> str:
     out = ["# Upstream sync", "", "| KEY | Old ref | New ref | New SHA |"]
     out.append("|---|---|---|---|")
@@ -242,12 +353,23 @@ def _report(
         ]
     if drift:
         out += ["", "## Companion drift"]
-        for key, drows in drift.items():
-            out += ["", f"### {key}", ""]
-            if not drows:
-                out.append("No SKILL.md changes.")
-            for row in drows:
-                out.append(f"- {row.path}")
+        for key, found in drift.items():
+            out += [
+                "",
+                f"### {key}",
+                "",
+                f"<!-- drift-fingerprint: {key} {found.fingerprint} -->",
+                (
+                    f"Re-vet these changes, then bump the {key} pin in"
+                    " scripts/fetch_upstream.sh and add an addendum to the"
+                    " companion ADR. Or close this issue to keep the current"
+                    " pin: it stays closed until these files change again."
+                ),
+                "",
+            ]
+            for row in found.rows:
+                suffix = "" if row.status == "changed" else f" ({row.status})"
+                out.append(f"- {row.path}{suffix}")
                 out += [f"  - {_cell(h)}" for h in row.hits]
     return "\n".join(out) + "\n"
 
@@ -295,7 +417,7 @@ def main(argv: list[str] | None = None) -> int:
         )
     )
 
-    companion_hits = any(r.hits for d in drift.values() for r in d)
+    companion_hits = any(r.hits for d in drift.values() for r in d.rows)
     if any(r.status != "clean" or r.hits for r in rows) or companion_hits:
         return 20
     return 10 if rows else 0

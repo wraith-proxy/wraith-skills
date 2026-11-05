@@ -139,3 +139,12 @@ def test_app_token_steps_use_client_id_not_deprecated_app_id():
     for _, step in found:
         assert "app-id" not in step["with"]
         assert step["with"]["client-id"] == "${{ secrets.WRAITH_BOT_APP_ID }}"
+
+
+def test_drift_issues_come_from_the_tested_helper():
+    step = sync_step("Companion drift issues")
+    run = step["run"]
+    assert step["env"]["GH_TOKEN"] == "${{ steps.app.outputs.token }}"
+    assert "gh issue list --state all" in run
+    assert "scripts/drift_issues.py" in run
+    assert "--search" not in run

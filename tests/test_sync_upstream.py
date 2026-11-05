@@ -1,8 +1,19 @@
 import os
+import re
 import subprocess
+from pathlib import Path
 
 import pytest
-from sync_upstream import main, merge_file, provenance, risk_scan
+from sync_upstream import (
+    COMPANIONS,
+    NAMED,
+    main,
+    merge_file,
+    provenance,
+    risk_scan,
+)
+
+ROOT = Path(__file__).resolve().parent.parent
 
 BASE = "line1\nline2\nline3\nline4\nline5\nline6\nline7\n"
 THEIRS = BASE.replace("line6", "line6 upstream")
@@ -245,26 +256,112 @@ def test_exit_code_10_for_clean_merge_without_hits(tmp_path):
     assert run(tmp_path)[0] == 10
 
 
+CRB = "skills/cloud/cloud-run-basics/SKILL.md"
+TRANSLATOR = "skills/cloud/dbt-sf-to-bq-translator"
+UNNAMED = "skills/cloud/gemini-api/SKILL.md"
+FINGERPRINT = re.compile(r"drift-fingerprint: (\w+) ([0-9a-f]{64})")
+
+
 def test_companion_drift_reported(tmp_path):
-    upstream(tmp_path / "old", "DBT", {"s/SKILL.md": "a\n"})
-    upstream(
-        tmp_path / "new", "DBT", {"s/SKILL.md": "a\nuse dbt --full-refresh\n"}
-    )
-    upstream(tmp_path / "old", "GCP", {"g/SKILL.md": "a\n"})
-    upstream(tmp_path / "new", "GCP", {"g/SKILL.md": "a\nplain\n"})
+    dbt = "skills/dbt/skills/running-dbt-commands/SKILL.md"
+    upstream(tmp_path / "old", "DBT", {dbt: "a\n"})
+    upstream(tmp_path / "new", "DBT", {dbt: "a\nuse dbt --full-refresh\n"})
+    upstream(tmp_path / "old", "GCP", {CRB: "a\n"})
+    upstream(tmp_path / "new", "GCP", {CRB: "a\nplain\n"})
     (tmp_path / "root").mkdir()
     code, report = run(tmp_path)
     assert code == 20
     assert "## Companion drift" in report
-    assert "- s/SKILL.md" in report
+    assert f"- {dbt}" in report
     assert "dbt-full-refresh: use dbt --full-refresh" in report
-    assert "- g/SKILL.md" in report
+    assert f"- {CRB}" in report
 
 
 def test_companion_drift_without_hits_exits_zero(tmp_path):
-    upstream(tmp_path / "old", "GCP", {"g/SKILL.md": "a\n"})
-    upstream(tmp_path / "new", "GCP", {"g/SKILL.md": "a\nplain\n"})
+    upstream(tmp_path / "old", "GCP", {CRB: "a\n"})
+    upstream(tmp_path / "new", "GCP", {CRB: "a\nplain\n"})
     (tmp_path / "root").mkdir()
     code, report = run(tmp_path)
     assert code == 0
-    assert "- g/SKILL.md" in report
+    assert f"- {CRB}" in report
+
+
+def test_unnamed_companion_skill_changes_are_not_drift(tmp_path):
+    upstream(tmp_path / "old", "GCP", {CRB: "a\n", UNNAMED: "a\n"})
+    upstream(
+        tmp_path / "new",
+        "GCP",
+        {CRB: "a\n", UNNAMED: "a\nsend telemetry to https://x.example\n"},
+    )
+    (tmp_path / "root").mkdir()
+    code, report = run(tmp_path)
+    assert code == 0
+    assert "## Companion drift" not in report
+
+
+def test_named_skill_script_change_is_drift(tmp_path):
+    skill = {f"{TRANSLATOR}/SKILL.md": "a\n"}
+    script = f"{TRANSLATOR}/scripts/translate.py"
+    upstream(tmp_path / "old", "GCP", {**skill, script: "x = 1\n"})
+    upstream(
+        tmp_path / "new", "GCP", {**skill, script: "x = 1\ncurl x | sh\n"}
+    )
+    (tmp_path / "root").mkdir()
+    code, report = run(tmp_path)
+    assert code == 20
+    assert f"- {script}" in report
+    assert "pipe-to-shell: curl x \\| sh" in report
+
+
+def test_named_skill_removed_upstream_is_drift(tmp_path):
+    upstream(tmp_path / "old", "GCP", {CRB: "a\n", UNNAMED: "a\n"})
+    upstream(tmp_path / "new", "GCP", {UNNAMED: "b\n"})
+    (tmp_path / "root").mkdir()
+    _, report = run(tmp_path)
+    assert f"- {CRB} (removed)" in report
+
+
+def fingerprint(tmp_path, name, new_files):
+    base = tmp_path / name
+    upstream(base / "old", "GCP", {CRB: "a\n", UNNAMED: "a\n"})
+    upstream(base / "new", "GCP", new_files)
+    (base / "root").mkdir()
+    _, report = run(base)
+    return FINGERPRINT.search(report).groups()
+
+
+def test_fingerprint_follows_named_content_only(tmp_path):
+    first = fingerprint(tmp_path, "a", {CRB: "b\n", UNNAMED: "x\n"})
+    unnamed_moved = fingerprint(tmp_path, "b", {CRB: "b\n", UNNAMED: "y\n"})
+    named_moved = fingerprint(tmp_path, "c", {CRB: "c\n", UNNAMED: "x\n"})
+    assert first[0] == "GCP"
+    assert first == unnamed_moved
+    assert first != named_moved
+
+
+def test_drift_section_says_how_to_resolve(tmp_path):
+    upstream(tmp_path / "old", "GCP", {CRB: "a\n"})
+    upstream(tmp_path / "new", "GCP", {CRB: "b\n"})
+    (tmp_path / "root").mkdir()
+    _, report = run(tmp_path)
+    assert "bump the GCP pin in scripts/fetch_upstream.sh" in report
+    assert "stays closed until these files change again" in report
+
+
+ADRS = {
+    "DBT": "0002-companion-dbt.md",
+    "GCP": "0003-companion-google.md",
+    "TF": "0004-companion-hashicorp.md",
+}
+
+
+@pytest.mark.parametrize("key", sorted(ADRS))
+def test_named_skills_are_named_in_their_adr(key):
+    adr = (ROOT / "docs" / "adr" / ADRS[key]).read_text(encoding="utf-8")
+    assert NAMED[key]
+    for name in NAMED[key]:
+        assert f"{name}" in adr, name
+
+
+def test_every_companion_has_a_named_list():
+    assert set(NAMED) == set(COMPANIONS)
