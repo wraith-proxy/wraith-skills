@@ -104,10 +104,8 @@ pre-approved. Without wraith it ran `bq rm` in 3 of 3 runs. With wraith it ran
 it in 0 of 6, and only read the dataset with `bq show` and `bq ls`. That is
 nine runs of one command against a stub: a sign, not a benchmark.
 
-It is an instruction, not a check. In Claude Code nothing blocks the command
-if the agent ignores the skill, so keep your permission prompts on. On
-Copilot CLI a local guard hook also checks shell commands, and
-`/wraith:careful` sets its mode to `ask`, `deny` or `off`.
+It is an instruction, not a check. Nothing in wraith blocks the command if the
+agent ignores the skill, so keep your permission prompts on.
 
 ## Start here
 
@@ -145,10 +143,9 @@ what a GCP data team keeps needing:
 ## FAQ
 
 **Is `careful` a security boundary?**
-No. It is an instruction the agent follows, and the Copilot CLI guard is
-best-effort string matching. Anything that changes production, pushes, deletes
-or spends beyond your dev cost cap still needs your explicit go-ahead in the
-conversation.
+No. It is an instruction the agent follows. Anything that changes production,
+pushes, deletes or spends beyond your dev cost cap still needs your explicit
+go-ahead in the conversation.
 
 **Do I need GCP?**
 The sprint and `careful` work on any project. The domain skills (BigQuery,
@@ -156,29 +153,16 @@ dbt on BigQuery, Cloud Run, Terraform on GCP) are written for data teams on
 GCP.
 
 **Claude Code or Copilot?**
-Both, from one repository, with the same skills and agents. Copilot CLI also
-runs two local hooks; Claude Code runs none. The details are below.
+Both, from one repository, with the same skills and agents.
 
 **Why "wraith"?**
 Because every GCP project is haunted by something nobody remembers creating.
 
 ## What wraith runs, sends and stores
 
-In Claude Code wraith runs nothing on its own. It has no hooks; it is skills
-and agents your agent reads when they apply.
-
-On Copilot CLI wraith runs two local Python hooks. At session start it adds
-the wraith router text to the conversation. Before `bash` and `powershell`
-commands it checks the command against a list of destructive patterns and asks
-you, or blocks, depending on the guard mode.
-
-The guard checks the pending command text locally and discards it. It stores
-nothing. wraith sends nothing, fetches nothing, collects no telemetry and
-checks for no updates.
-
-To choose its mode and extra patterns the guard reads the `WRAITH_GUARD`
-environment variable, and `.wraith/guard-mode` and
-`.wraith/guard-patterns.txt` in your project if they exist.
+wraith runs nothing on its own. It has no hooks; it is skills and agents your
+agent reads when they apply. It stores nothing, sends nothing, fetches
+nothing, collects no telemetry and checks for no updates.
 
 Skills may suggest commands that download packages (for example
 `uvx check-jsonschema`); the agent runs them in the open.
@@ -194,9 +178,7 @@ agent's full permissions, so skim each SKILL.md before installing.
 
 ## Requirements
 
-Claude Code needs nothing extra. Copilot CLI needs `python3` 3.9 or later on
-PATH for the hooks. Without it, Copilot carries on because each hook ends with
-`|| true`.
+Claude Code or GitHub Copilot CLI. Nothing else.
 
 ## Uninstall
 

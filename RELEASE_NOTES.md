@@ -8,3 +8,5 @@ describes. Write one short paragraph for users, not a changelog. Leave the
 body empty and the release falls back to the generated notes alone. Comments
 like this one are stripped.
 -->
+
+wraith no longer ships hooks, on Claude Code or Copilot CLI. The destructive-command guard and the session-start router are gone, along with `.wraith/guard-mode`, `.wraith/guard-patterns.txt` and `WRAITH_GUARD`. The `careful` skill now tells the agent to stop and confirm before destructive commands, but that is an instruction and nothing enforces it, so keep your permission prompts on.

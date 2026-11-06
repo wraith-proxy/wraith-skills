@@ -9,8 +9,7 @@ wraith. These terms summarise it and add practical points.
 1. **As is.** wraith is provided without warranty of any kind, as the
    MIT License states.
 2. **You are responsible for what your agent runs.** wraith's safety
-   instructions and its Copilot CLI guard are best-effort, not a security
-   boundary. Review commands
+   instructions are best-effort, not a security boundary. Review commands
    before approving them, especially anything that touches production,
    billed services or shared state. Cloud costs your agent incurs are yours.
 3. **Review the output.** Code, data contracts, infrastructure changes and

@@ -50,7 +50,7 @@ The user's direct requests first, then the project's AGENTS.md and CLAUDE.md, th
 | Ship | wraith:deploy | `deploy.md` |
 | Reflect | wraith:handoff | `handoff.md` |
 | Reflect | wraith:knowledge-base | knowledge files, GLOSSARY.md, ADRs |
-| Safety | wraith:careful | `.wraith/guard-mode` (Copilot CLI) |
+| Safety | wraith:careful | nothing (conversation) |
 | Meta | wraith:using-wraith, wraith:setup, wraith:writing-skills, wraith:wizard | AGENTS.md `## wraith` block (setup) |
 
 ## Which skill
@@ -86,8 +86,7 @@ The user's direct requests first, then the project's AGENTS.md and CLAUDE.md, th
 ## Safety
 
 - Before destructive data and infra commands (Terraform destroy, gcloud deletes, bq rm, DROP or TRUNCATE, dbt full refresh or prod target, force push), follow wraith:careful: stop and get approval for that exact command.
-- On Copilot CLI a guard hook also checks shell commands, and wraith:careful changes its mode.
-- Neither is a security boundary.
+- This is an instruction, not a security boundary.
 
 ## Host tools
 
