@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.0 (2026-11-06)
+
+### Breaking Changes
+
+- remove all command hooks and the guard
+
 ## v0.5.11 (2026-11-04)
 
 ### Bug Fixes
