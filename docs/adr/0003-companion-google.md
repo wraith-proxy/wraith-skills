@@ -218,3 +218,17 @@ commit 0f2afff, version 1.1.2 to 1.1.3). Its whole folder was read:
 
 Verdict unchanged: recommend with caveat, migration work only. The owner
 accepts the bump by merging it.
+
+## Addendum 2026-11-06: pin bumped to c2cf4ba
+
+Ticket: WSK-00098. Drafted by the nightly upstream sync
+(#95). The GCP pin moves from f70aa02 to
+c2cf4ba74c0e47f0e7a81d29e053e740998a0ae2. Named skills changed: `gcloud`, `google-cloud-recipe-auth`.
+Files changed: 2. Automated scan: no risk hits.
+
+No machine read (no usable answer from the machine read),
+so a human must read the diff in the pull request before
+accepting it.
+
+The owner accepts the bump by merging it, after reading the diff in
+the pull request.
