@@ -6,17 +6,9 @@ CLAUDE = ROOT / "hooks" / "hooks.json"
 COPILOT = ROOT / "com.github.copilot" / "hooks" / "hooks.json"
 
 
-def test_claude_hooks_quote_plugin_root():
-    hooks = json.loads(CLAUDE.read_text())["hooks"]
-    start = hooks["SessionStart"][0]
-    pre = hooks["PreToolUse"][0]
-    assert start["matcher"] == "startup|clear|compact"
-    assert pre["matcher"] == "Bash|mcp__.*"
-    for entry in (start, pre):
-        cmd = entry["hooks"][0]
-        assert cmd["timeout"] == 10
-        assert '"${CLAUDE_PLUGIN_ROOT}/hooks/' in cmd["command"]
-        assert cmd["command"].startswith("python3 ")
+def test_claude_plugin_ships_no_hooks():
+    # The Claude directory refuses command hooks from unverified orgs.
+    assert not CLAUDE.exists()
 
 
 def test_copilot_hooks_fail_open():

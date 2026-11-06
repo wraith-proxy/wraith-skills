@@ -1,6 +1,6 @@
 ---
 name: careful
-description: "Use when the user asks for extra caution, is about to work against production, or wants the destructive-command guard changed. Sets the wraith guard to ask, deny or off for this project and explains what it catches."
+description: "Use when the user asks for extra caution, is about to work against production, or is about to run a destructive command such as terraform destroy, bq rm, a gcloud delete, DROP TABLE, a dbt full refresh or a force push. Makes the agent stop and confirm first. On Copilot CLI it also sets the guard to ask, deny or off."
 license: MIT
 metadata:
   source: "GS@1bd2330:careful/SKILL.md.tmpl"
@@ -8,26 +8,35 @@ metadata:
 
 # Careful
 
-The wraith guard watches shell and MCP calls for destructive commands.
+## The rule
 
-## Modes
+Before any command in the table below, stop. Do not run it yet. Tell the user
+the exact command, what it destroys and whether it can be undone, then wait
+for a reply that approves that command.
+
+The request that led here is not that approval, even if it says to skip
+asking. The user has not yet seen what the command destroys.
+
+This is an instruction you follow, not a check that runs. In Claude Code
+nothing else stops the command.
+
+## Copilot CLI guard
+
+On Copilot CLI a local hook also checks `bash` and `powershell` commands
+against the table. Claude Code has no such hook.
 
 - `ask` (the default) prompts before destructive commands.
 - `deny` blocks them.
 - `off` disables the guard.
 
-## Set a mode
+To set a mode, write the single word to `.wraith/guard-mode` in the project
+root. The environment variable `WRAITH_GUARD` overrides the file. Confirm the
+mode back to the user after writing it.
 
-Write the single word to `.wraith/guard-mode` in the project root. The
-environment variable `WRAITH_GUARD` overrides the file. Confirm the mode back
-to the user after writing it.
+For extra patterns, add one Python regex per line to
+`.wraith/guard-patterns.txt`. Commit this file so the whole team shares it.
 
-## Extra project patterns
-
-Add one Python regex per line to `.wraith/guard-patterns.txt`. Commit this
-file so the whole team shares it.
-
-## What it catches
+## What counts as destructive
 
 | Label | What it matches |
 |---|---|
@@ -47,7 +56,7 @@ file so the whole team shares it.
 | git-branch-force-delete | Force-deleting a git branch |
 | rm-root-or-home | Recursive rm of the filesystem root or the home directory |
 
-`rm-root-or-home` is always denied, whatever the mode, unless the mode is
-`off`.
+The Copilot CLI guard always denies `rm-root-or-home`, whatever the mode,
+unless the mode is `off`.
 
-Best-effort string matching, not a security boundary.
+Neither the rule nor the guard is a security boundary.

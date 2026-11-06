@@ -21,7 +21,7 @@ Back to the [README](../README.md).
 | Ship | `deploy` | `.../deploy.md` | `handoff` |
 | Reflect | `handoff` | `.../handoff.md` | |
 | Reflect | `knowledge-base` | knowledge files, GLOSSARY.md, ADRs | |
-| Safety | `careful` | `.wraith/guard-mode` | |
+| Safety | `careful` | `.wraith/guard-mode` (Copilot CLI) | |
 | Meta | `using-wraith`, `setup`, `writing-skills`, `wizard` | AGENTS.md `## wraith` block (setup) | |
 
 Sprint artifacts go to `docs/wraith/<YYYY-MM-DD>-<topic>/` by default.
@@ -54,7 +54,7 @@ Sprint artifacts go to `docs/wraith/<YYYY-MM-DD>-<topic>/` by default.
 | deploy | Ship | Rolls out to production with traffic splits and a rollback plan |
 | handoff | Reflect | Narrates decisions and writes a handover doc for a fresh session |
 | knowledge-base | Reflect | Records quirks, conventions and decisions so they survive the session |
-| careful | Safety | Sets the destructive-command guard to ask, deny or off |
+| careful | Safety | Stops to confirm destructive commands; sets the Copilot CLI guard mode |
 | setup | Meta | Records project commands and targets in an AGENTS.md wraith block |
 | writing-skills | Meta | Creates and edits skills, agents, AGENTS.md and CLAUDE.md |
 | wizard | Meta | Generates interactive bash wizards for steps only humans can do |
