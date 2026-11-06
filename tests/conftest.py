@@ -5,8 +5,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-for sub in ("hooks", "scripts"):
-    sys.path.insert(0, str(ROOT / sub))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 
 @pytest.fixture(autouse=True)

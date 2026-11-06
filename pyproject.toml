@@ -10,7 +10,7 @@ target-version = "py39"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=hooks --cov=scripts --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=scripts --cov-report=term-missing --cov-fail-under=80"
 
 [dependency-groups]
 dev = [

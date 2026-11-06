@@ -50,7 +50,7 @@ The user's direct requests first, then the project's AGENTS.md and CLAUDE.md, th
 | Ship | wraith:deploy | `deploy.md` |
 | Reflect | wraith:handoff | `handoff.md` |
 | Reflect | wraith:knowledge-base | knowledge files, GLOSSARY.md, ADRs |
-| Safety | wraith:careful | `.wraith/guard-mode` |
+| Safety | wraith:careful | nothing (conversation) |
 | Meta | wraith:using-wraith, wraith:setup, wraith:writing-skills, wraith:wizard | AGENTS.md `## wraith` block (setup) |
 
 ## Which skill
@@ -85,9 +85,8 @@ The user's direct requests first, then the project's AGENTS.md and CLAUDE.md, th
 
 ## Safety
 
-- A guard hook asks before destructive data and infra commands (Terraform destroy, gcloud deletes, bq rm, DROP or TRUNCATE, dbt full refresh or prod target, force push).
-- wraith:careful changes its mode.
-- It is best-effort string matching, not a security boundary.
+- Before destructive data and infra commands (Terraform destroy, gcloud deletes, bq rm, DROP or TRUNCATE, dbt full refresh or prod target, force push), follow wraith:careful: stop and get approval for that exact command.
+- This is an instruction, not a security boundary.
 
 ## Host tools
 

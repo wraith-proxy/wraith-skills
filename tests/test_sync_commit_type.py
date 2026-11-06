@@ -39,7 +39,7 @@ def test_non_shipped_path_is_chore(path):
         "skills/x/SKILL.md",
         "agents/a.md",
         "hooks/guard.py",
-        "assets/icon.png",
+        "assets/example.txt",
         "com.github.copilot/agents/a.md",
         ".claude-plugin/plugin.json",
         "plugin.json",

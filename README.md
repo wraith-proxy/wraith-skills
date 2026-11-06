@@ -42,7 +42,7 @@ Claude Code or GitHub Copilot CLI, inside a session:
 /plugin install wraith@wraith-proxy
 ```
 
-That's it. The guard starts in `ask` mode and there is nothing to configure.
+That's it. There is nothing to configure.
 
 <details>
 <summary>From a terminal instead</summary>
@@ -78,33 +78,39 @@ Same 12 plans, same planted problems. With wraith the agent catches 127 of
 <p align="center"><sub>Benchmark case p10, one run per arm (each the median of its 5). Source rows: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L57-L58">p10 in the results</a>.</sub></p>
 
 **What this does not prove:** these numbers measure plan review and nothing
-else. Every other claim on this page is a description, not a measurement.
+else. Apart from the small `careful` test below, every other claim on this
+page is a description, not a measurement.
 
-## The guard
+## Careful
 
 Your agent reaches for `bq rm -r -f`. The ghost gets there first.
 
 <p align="center">
-  <img src="assets/demo-careful.gif" width="640" alt="An agent tries bq rm -r -f and the wraith guard blocks it">
+  <img src="assets/demo-careful.gif" width="640" alt="Told to run bq rm -r -f without asking, the agent stops, lists what the command would destroy and waits for a yes">
 </p>
 
-<p align="center"><sub>A real Claude Code run with the guard in <code>deny</code> mode (<code>WRAITH_GUARD=deny</code>). The default, <code>ask</code>, prompts you instead.</sub></p>
+<p align="center"><sub>A real Claude Code run with wraith loaded. <code>bq</code> was a local stub, so the tables are invented and nothing could be deleted.</sub></p>
 
-Before the command runs, the guard checks it for the classics:
+The `careful` skill tells the agent to stop before the classics:
 `terraform destroy`, `terraform apply -auto-approve`, `terraform state rm`,
 `gcloud ... delete`, recursive `gsutil rm` and `gcloud storage rm`, `bq rm`,
 `DROP TABLE`, `TRUNCATE TABLE`, `DELETE FROM`, `dbt build --full-refresh`,
 `--target prod`, `git push --force`, `git reset --hard`, `git clean -f`,
-`git branch -D` and `rm -rf` on `/` or `~`.
+`git branch -D` and `rm -rf` on `/` or `~`. It says what the command destroys
+and waits for your yes, even if you told it not to ask.
 
-Three modes. `ask`, the default, prompts you. `deny` blocks. `off` steps
-aside. `/wraith:careful` sets the mode for your project and explains what the
-guard catches.
+We gave Claude Code (Opus 5.5) the prompt in the demo, with `bq` commands
+pre-approved. Without wraith it ran `bq rm` in 3 of 3 runs. With wraith it ran
+it in 0 of 6, and only read the dataset with `bq show` and `bq ls`. That is
+nine runs of one command against a stub: a sign, not a benchmark.
+
+It is an instruction, not a check. Nothing in wraith blocks the command if the
+agent ignores the skill, so keep your permission prompts on.
 
 ## Start here
 
-- `careful`: stops the agent running a destructive command on production
-  without asking you first.
+- `careful`: tells the agent to stop and ask you before a destructive command
+  on production.
 - `plan-data-review`: checks a data plan for grain, contracts, cost, personal
   data and rollback before anyone builds it.
 - `odcs-contracts`: writes and validates the data contract, and keeps your dbt
@@ -131,44 +137,32 @@ what a GCP data team keeps needing:
 - Grain and cost review of data plans before they are built.
 - ODCS data contracts as the source of truth for your models.
 - Blast-radius review of GCP infrastructure plans.
-- A guard that asks before destructive commands.
+- A skill that stops to ask before destructive commands.
 - One sprint: plan, build, review, ship.
 
 ## FAQ
 
-**Is the guard a security boundary?**
-No. It is best-effort string matching that asks first. Anything that changes
-production, pushes, deletes or spends beyond your dev cost cap still needs
-your explicit go-ahead in the conversation.
+**Is `careful` a security boundary?**
+No. It is an instruction the agent follows. Anything that changes production,
+pushes, deletes or spends beyond your dev cost cap still needs your explicit
+go-ahead in the conversation.
 
 **Do I need GCP?**
-The sprint and the guard work on any project. The domain skills (BigQuery,
+The sprint and `careful` work on any project. The domain skills (BigQuery,
 dbt on BigQuery, Cloud Run, Terraform on GCP) are written for data teams on
 GCP.
 
 **Claude Code or Copilot?**
-Both, from one repository, with the same skills and agents. The Copilot CLI
-guard checks shell commands only; the details are below.
+Both, from one repository, with the same skills and agents.
 
 **Why "wraith"?**
 Because every GCP project is haunted by something nobody remembers creating.
 
 ## What wraith runs, sends and stores
 
-wraith runs two local Python hooks. At session start it adds the wraith router
-text to the conversation. Before shell commands it checks the command against
-a list of destructive patterns and asks you, or blocks, depending on the guard
-mode. In Claude Code the guard also checks MCP tool calls, reading their
-arguments as JSON; the Copilot CLI guard checks only `bash` and `powershell`
-commands.
-
-The guard checks the pending command text locally and discards it. It stores
-nothing. wraith sends nothing, fetches nothing, collects no telemetry and
-checks for no updates.
-
-To choose its mode and extra patterns the guard reads the `WRAITH_GUARD`
-environment variable, and `.wraith/guard-mode` and
-`.wraith/guard-patterns.txt` in your project if they exist.
+wraith runs nothing on its own. It has no hooks; it is skills and agents your
+agent reads when they apply. It stores nothing, sends nothing, fetches
+nothing, collects no telemetry and checks for no updates.
 
 Skills may suggest commands that download packages (for example
 `uvx check-jsonschema`); the agent runs them in the open.
@@ -184,9 +178,7 @@ agent's full permissions, so skim each SKILL.md before installing.
 
 ## Requirements
 
-`python3` 3.9 or later on PATH for the hooks. Without it, Claude Code shows a
-hook error and carries on, and Copilot carries on because each hook ends with
-`|| true`.
+Claude Code or GitHub Copilot CLI. Nothing else.
 
 ## Uninstall
 

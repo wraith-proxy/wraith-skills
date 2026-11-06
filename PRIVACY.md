@@ -1,9 +1,9 @@
 # Privacy
 
-Last updated: 4 November 2026
+Last updated: 6 November 2026
 
-wraith is a plugin made of instructions (skills and agents) and two small
-local hook scripts. It has no server, no account and no analytics.
+wraith is a plugin made of instructions (skills and agents). It has no hooks,
+no server, no account and no analytics.
 
 ## What wraith collects
 
@@ -13,20 +13,7 @@ data and stores no data.
 
 ## What runs on your machine
 
-- **Session start hook** reads wraith's own `using-wraith` skill file and adds
-  it to your agent's session context.
-- **Guard hook** runs before shell commands. In Claude Code it also runs
-  before MCP tool calls; in GitHub Copilot CLI it checks only `bash` and
-  `powershell` commands, so MCP tool calls are not checked there. The host
-  passes the hook the pending command, or for MCP calls the full tool
-  arguments as JSON, plus the working directory. The hook checks that text
-  against a list of destructive patterns and answers "ask" or "deny", or
-  nothing. The check happens locally and the text is discarded when the
-  hook exits. To choose its mode and any extra patterns it reads the
-  `WRAITH_GUARD` environment variable, and `.wraith/guard-mode` and
-  `.wraith/guard-patterns.txt` in your project if they exist. It stores
-  nothing, writes no files and sends nothing; its only output is its
-  answer to your agent host.
+Nothing runs on its own. wraith has no hooks or background processes.
 
 ## What your agent does with wraith's instructions
 

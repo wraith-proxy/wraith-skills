@@ -9,7 +9,6 @@ __pycache__/
 coverage.xml
 htmlcov/
 evals/results/
-.wraith/guard-mode
 .env
 .env.private
 .claude/settings.local.json

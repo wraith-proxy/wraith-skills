@@ -62,11 +62,7 @@ Show the user a draft, let them edit, then write or update this block in `AGENTS
 
 If `CLAUDE.md` is missing, create it containing `@AGENTS.md`. If it exists without that import, append the line `@AGENTS.md`.
 
-### 5. Guard mode
-
-Add `.wraith/guard-mode` to `.gitignore`.
-
-### 6. Companions
+### 5. Companions
 
 Recommend missing companions. Never install anything yourself. For each one, recommend the companion and tell the user to install it with the commands in the wraith README's Companions section, after skimming its SKILL.md first:
 
@@ -75,6 +71,6 @@ Recommend missing companions. Never install anything yourself. For each one, rec
 - BigQuery in use (`dbt-bigquery`, `google-cloud-bigquery` or `bq` in the repo) and no `bigquery-basics` skill listed: Google's BigQuery skills.
 - A Cloud Run service or job defined and no `cloud-run-basics` skill listed: Google's `cloud-run-basics`.
 
-### 7. Issue trackers
+### 6. Issue trackers
 
 Do not create issue-tracker files.
