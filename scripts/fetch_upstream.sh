@@ -10,7 +10,7 @@ pins() {
 SP https://github.com/obra/superpowers v7.0.1 2ce8aa15d05bd57213e6f746f953aafb7ded7a8b
 MP https://github.com/mattpocock/skills v1.3.2 d1478fcb140db0b93c0c8df17bcfd311844749d0
 KA https://github.com/multica-ai/andrej-karpathy-skills - 2c606141936f1eeef17fa3043a72095b4765b9c2
-AA https://github.com/msitarzewski/agency-agents - b37b5bb33b78f2c1d6567d98e25ca818e3259219
+AA https://github.com/msitarzewski/agency-agents - b859c515d813efcfc4755d3471dd9e7686c7706d
 GS https://github.com/garrytan/gstack v1.91.318.0 1bd2330350a6aa978f5c91de3c0be97004d0617b
 DBT https://github.com/dbt-labs/dbt-agent-skills - b8facde20b7a92c40ce3e6b86b71c4b92aa44040
 GCP https://github.com/google/skills - f70aa02c5e8d1360169af143f4bfc0af68d73012
