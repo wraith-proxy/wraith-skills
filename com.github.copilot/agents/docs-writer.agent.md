@@ -3,7 +3,7 @@ name: docs-writer
 description: "Use to write or update READMEs, MkDocs pages, docstrings, ADRs and CLI help. Dry, witty and concise; never snarky at people."
 tools: Read, Edit, Write, Grep, Glob
 ---
-<!-- GENERATED from agents/docs-writer.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/docs-writer.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-technical-writer.md -->
 

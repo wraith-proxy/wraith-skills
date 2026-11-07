@@ -3,7 +3,7 @@
 Checklist: contract matches models, personal data stays out, grain is tested, cost is bounded, plan followed.
 
 ## Blocker (fixed)
-- `daily_revenue.sql` first said `group by order_date, country`. In BigQuery `country` there can resolve to the raw nullable column rather than the `coalesce(...)` alias, so null-country orders would form a separate group and the `UNKNOWN` bucket the plan promised would not appear. Fixed with `group by 1, 2`. Add a fixture row with a null country to the grain test when the project first runs against a dev target.
+- `daily_revenue` model first said `group by order_date, country`. In BigQuery `country` there can resolve to the raw nullable column rather than the `coalesce(...)` alias, so null-country orders would form a separate group and the `UNKNOWN` bucket the plan promised would not appear. Fixed with `group by 1, 2`. Add a fixture row with a null country to the grain test when the project first runs against a dev target.
 
 ## Suggestions
 - `schema.yml` has no test that `amount_refunded <= amount_gross`. The plan's card 4 asks for it; add it as a singular test.

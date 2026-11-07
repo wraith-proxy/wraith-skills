@@ -3,7 +3,7 @@ name: security-engineer
 description: "Use for security and privacy review of GCP and data work: IAM, secrets, ingress, supply chain, and personal-data handling including classification and crypto-shredding. Reports findings; changes nothing unless asked."
 tools: Bash, Read, Grep, Glob
 ---
-<!-- GENERATED from agents/security-engineer.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/security-engineer.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:security/security-cloud-security-architect.md, AA@b37b5bb:engineering/engineering-privacy-engineer.md -->
 

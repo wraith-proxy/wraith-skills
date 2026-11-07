@@ -96,5 +96,5 @@ You win twice: fewer tokens, and a sharper hook for the agent to hang its thinki
 - G6: name matches its directory; description is at most 400 characters and says when to use the skill; SKILL.md is at most 400 lines and 20,000 bytes; links go one level deep within the skill.
 - G8: no em dash (U+2014) under skills, agents, hooks or evals.
 - G9: cross-references are written wraith:<name> and must resolve to a skill directory or agent file.
-- Agents: edit agents/<name>.md only and regenerate Copilot copies with scripts/build_copilot.py.
+- Agents: edit agents/<name>.md only and regenerate Copilot copies with wraith-build-copilot.
 - Descriptions decide triggering: name the situations, not the content.

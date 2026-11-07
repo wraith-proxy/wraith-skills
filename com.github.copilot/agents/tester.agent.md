@@ -3,7 +3,7 @@ name: tester
 description: "Use to write or strengthen tests: behaviour-level pytest, dbt unit and data tests, golden files, and the edge cases an implementation missed. Mocks only at system boundaries."
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- GENERATED from agents/tester.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/tester.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:testing/testing-test-automation-engineer.md -->
 

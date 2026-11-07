@@ -3,7 +3,7 @@ name: ontologist
 description: "Use for ontology and context-layer work: defining entities, properties, links and axioms, separating meaning from facts, curating question-to-SQL pairs, and mapping data contracts to ontology terms."
 tools: Read, Edit, Write, Grep, Glob, WebFetch
 ---
-<!-- GENERATED from agents/ontologist.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/ontologist.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-knowledge-graph-engineer.md -->
 

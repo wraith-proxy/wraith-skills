@@ -33,7 +33,7 @@ this conversation.
 1. List the changed models: `git diff --name-only <base>...HEAD -- <dbt_project_dir>/models`.
 2. Build into dev from `dbt_project_dir`: `dbt build --select <changed models>+ --target <dbt_target_dev>`. Match failures per wraith:dbt-bigquery rule 18.
 3. Run the contract checks from wraith:odcs-contracts (validate and drift).
-4. Compare with production for one recent `ds`, dry-running each comparison first, using [data-diff.sql](references/data-diff.sql):
+4. Compare with production for one recent `ds`, dry-running each comparison first, using [data-diff.md](references/data-diff.md):
    - row counts;
    - key coverage in both directions;
    - the NULL rate per column;

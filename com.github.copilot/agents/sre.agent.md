@@ -3,7 +3,7 @@ name: sre
 description: "Use for reliability work: observability, alerts, SLOs, incident triage, post-deploy watches, runbooks and post-mortems for Cloud Run services and data pipelines."
 tools: Bash, Read, Edit, Grep, Glob
 ---
-<!-- GENERATED from agents/sre.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/sre.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-sre.md, AA@b37b5bb:engineering/engineering-incident-response-commander.md -->
 

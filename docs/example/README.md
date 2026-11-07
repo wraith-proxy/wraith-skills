@@ -2,7 +2,7 @@
 
 A toy dbt-on-BigQuery project and the artifacts one sprint leaves behind, so you can see what plan, build, review and ship look like in committed files.
 
-**Honest scope.** This is an illustrative walkthrough. No warehouse was queried, no `dbt build` was run and no number here is a measurement. Names (`shop-analytics`, `raw.raw_orders`) are made up. The point is the shape of the artifacts, not the data.
+**Honest scope.** This is an illustrative walkthrough. No warehouse was queried, no `dbt build` was run and no number here is a measurement. Names (`shop-analytics`, `raw.raw_orders`) are made up. The point is the shape of the artifacts, not the data. The dbt models in `project/models/*/*.md` are Markdown with the SQL in a fenced block, so the project does not build as shipped: copy each block into a `.sql` file under `models/` before running the dbt build command.
 
 ## The task
 

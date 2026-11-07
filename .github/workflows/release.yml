@@ -28,8 +28,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      - run: uv sync --locked
+      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
       - name: bump, tag and release
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
@@ -41,7 +40,7 @@ jobs:
           fi
           # Subjects only: commitizen also reads bodies (issue #78).
           increment="$(git log --format=%s "$prev"..HEAD \
-            | uv run python scripts/release_gate.py)"
+            | wraith-release-gate)"
           if [ "$increment" = NONE ]; then
             echo "no releasing commit subjects since $prev"
             exit 0
@@ -50,10 +49,10 @@ jobs:
           bot_id="$(gh api "/users/${slug}[bot]" --jq .id)"
           git config user.name "${slug}[bot]"
           git config user.email "${bot_id}+${slug}[bot]@users.noreply.github.com"
-          before="$(uv run cz version --project)"
-          uv run cz --no-raise 3,21 bump --yes --increment "$increment" \
+          before="$(uvx --from commitizen==4.19.3 cz version --project)"
+          uvx --from commitizen==4.19.3 cz --no-raise 3,21 bump --yes --increment "$increment" \
             --changelog --changelog-to-stdout --git-output-to-stderr > notes.md
-          after="$(uv run cz version --project)"
+          after="$(uvx --from commitizen==4.19.3 cz version --project)"
           if [ "$before" = "$after" ]; then
             echo "no commits to bump"
             exit 0
@@ -62,7 +61,7 @@ jobs:
           if ! git diff --quiet "$prev" HEAD -- RELEASE_NOTES.md; then
             user_args=(--user RELEASE_NOTES.md)
           fi
-          uv run python scripts/release_notes.py --generated notes.md \
+          wraith-release-notes --generated notes.md \
             "${user_args[@]}" > final_notes.md
           git push origin HEAD:main "v$after"
           git push origin "v$after:refs/heads/release"

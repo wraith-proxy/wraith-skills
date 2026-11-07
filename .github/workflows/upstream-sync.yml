@@ -29,17 +29,16 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      - run: uv sync --locked
+      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
       - name: Fetch old and new upstream
         run: |
-          sh scripts/fetch_upstream.sh
-          sh scripts/fetch_upstream.sh --new-dir .upstream-new
+          wraith-fetch-upstream
+          wraith-fetch-upstream --new-dir .upstream-new
       - name: Compare upstream
         id: sync
         run: |
           code=0
-          keys=$(uv run python scripts/sync_upstream.py \
+          keys=$(wraith-sync-upstream \
             --old .upstream --new .upstream-new \
             --report sync-report.md) || code=$?
           drift=false
@@ -79,16 +78,16 @@ jobs:
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "${bot_id}+${APP_SLUG}[bot]@users.noreply.github.com"
           for key in $KEYS; do
-            url=$(grep "^$key " scripts/fetch_upstream.sh | cut -d' ' -f2)
+            url=$(grep "^$key " upstream-pins.txt | cut -d' ' -f2)
             ref=$(git -C ".upstream-new/$key" describe --tags --exact-match 2>/dev/null || echo -)
             sha=$(git -C ".upstream-new/$key" rev-parse HEAD)
-            sed -i "s|^$key .*|$key $url $ref $sha|" scripts/fetch_upstream.sh
+            sed -i "s|^$key .*|$key $url $ref $sha|" upstream-pins.txt
           done
-          uv run python scripts/build_copilot.py
+          wraith-build-copilot
           branch="bot/upstream-sync-$(date -u +%Y%m%d)"
           git switch -c "$branch"
           git add -u
-          type=$(git diff --name-only HEAD | uv run python scripts/sync_commit_type.py)
+          type=$(git diff --name-only HEAD | wraith-sync-commit-type)
           git commit --allow-empty -m "👻 $type/WSK-00010: sync upstream ${KEYS:-report only}"
           git push origin "$branch"
           url=$(gh pr create --head "$branch" \
@@ -161,7 +160,7 @@ jobs:
           # changed drift is queued for the vet and propose jobs (#95).
           gh issue list --state all --limit 500 \
             --json number,title,state,body > issues.json
-          uv run python scripts/drift_issues.py --report sync-report.md \
+          wraith-drift-issues --report sync-report.md \
             --issues issues.json --out . > actions.txt
           : > vet.txt
           while read -r action key number; do
@@ -186,7 +185,7 @@ jobs:
 
   # Machine read of a re-vet (#95). No write token reaches this job, and
   # the model runs with no tools: it sees the diff as text and answers with
-  # JSON that scripts/vet_companion.py checks before anything uses it.
+  # JSON that wraith-vet-companion checks before anything uses it.
   vet:
     needs: sync
     if: needs.sync.outputs.vet != '' && needs.sync.outputs.vet != '[]'
@@ -201,14 +200,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      - run: uv sync --locked
+      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
       - name: Bundle the named-skill diff
         env:
           KEY: ${{ matrix.target.key }}
           SHA: ${{ matrix.target.sha }}
         run: |
-          vet="uv run python scripts/vet_companion.py"
+          vet="wraith-vet-companion"
           $vet fetch --key "$KEY" --dest vet/old
           $vet fetch --key "$KEY" --sha "$SHA" --dest vet/new
           $vet bundle --key "$KEY" --old vet/old --new vet/new --out vet/bundle
@@ -232,7 +230,7 @@ jobs:
             || echo "machine read failed; the re-vet stays unread"
       - name: Check the verdict
         run: |
-          uv run python scripts/vet_companion.py verdict \
+          wraith-vet-companion verdict \
             --bundle vet/bundle --raw vet/raw.json
           cat vet/bundle/verdict.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -263,8 +261,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app.outputs.token }}
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      - run: uv sync --locked
+      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: vet-${{ matrix.target.key }}
@@ -278,7 +275,7 @@ jobs:
         run: |
           branch="bot/re-vet-$KEY"
           git switch -C "$branch"
-          title=$(uv run python scripts/vet_companion.py apply \
+          title=$(wraith-vet-companion apply \
             --bundle vet/bundle --ticket "$ISSUE" --root . \
             --pr-body pr-body.md)
           if [ -z "$title" ]; then
@@ -288,7 +285,7 @@ jobs:
           bot_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "${bot_id}+${APP_SLUG}[bot]@users.noreply.github.com"
-          git add scripts/fetch_upstream.sh docs/adr
+          git add upstream-pins.txt docs/adr
           git commit -q -m "$title"
           git push --force origin "$branch"
           gh label create needs-review --color d93f0b --force

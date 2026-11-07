@@ -3,7 +3,7 @@ name: implementer
 description: "Use to execute exactly one plan card: the files it owns, the tests it names, and one commit. Makes no design decisions and stops to report when the card is ambiguous."
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- GENERATED from agents/implementer.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/implementer.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: SP@2ce8aa1:skills/subagent-driven-development/implementer-prompt.md -->
 

@@ -2,8 +2,8 @@
 
 ## Checks to run before merge (not run for this example)
 - [ ] Contract validates against the ODCS v3.2.0 JSON Schema.
-- [ ] `dbt deps && dbt parse` passes.
-- [ ] `dbt build --target dev --select stg_orders daily_revenue` passes against a dev dataset.
+- [ ] Copy each block in `project/models/*/*.md` into a `.sql` file under `models/`, then `dbt deps && dbt parse` passes.
+- [ ] After copying the blocks into `.sql` files under `models/`, `dbt build --target dev --select stg_orders daily_revenue` passes against a dev dataset.
 - [ ] Row count and total revenue compared with finance's current spreadsheet for one closed week.
 
 ## Changelog line
