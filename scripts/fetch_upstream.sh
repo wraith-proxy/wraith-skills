@@ -13,7 +13,7 @@ KA https://github.com/multica-ai/andrej-karpathy-skills - 2c606141936f1eeef17fa3
 AA https://github.com/msitarzewski/agency-agents - b859c515d813efcfc4755d3471dd9e7686c7706d
 GS https://github.com/garrytan/gstack v1.91.318.0 1bd2330350a6aa978f5c91de3c0be97004d0617b
 DBT https://github.com/dbt-labs/dbt-agent-skills - b8facde20b7a92c40ce3e6b86b71c4b92aa44040
-GCP https://github.com/google/skills - c2cf4ba74c0e47f0e7a81d29e053e740998a0ae2
+GCP https://github.com/google/skills - 993b979cf055de97dd15d4d5751d2672de561679
 TF https://github.com/hashicorp/agent-skills - 5e30fa5c867ba6777c37e4206babfd08049c396f
 PINS
 }

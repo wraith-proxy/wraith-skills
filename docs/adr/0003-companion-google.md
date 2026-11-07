@@ -232,3 +232,17 @@ accepting it.
 
 The owner accepts the bump by merging it, after reading the diff in
 the pull request.
+
+## Addendum 2026-11-07: pin bumped to 993b979
+
+Ticket: WSK-00102. Drafted by the nightly upstream sync
+(#95). The GCP pin moves from c2cf4ba to
+993b979cf055de97dd15d4d5751d2672de561679. Named skills changed: `bigquery-ai-ml`.
+Files changed: 11. Automated scan: no risk hits.
+
+No machine read (no usable answer from the machine read),
+so a human must read the diff in the pull request before
+accepting it.
+
+The owner accepts the bump by merging it, after reading the diff in
+the pull request.
