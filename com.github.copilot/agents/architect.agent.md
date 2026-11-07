@@ -3,7 +3,7 @@ name: architect
 description: "Use to design or plan non-trivial data or infrastructure work before code exists: system design, tradeoffs, and decomposition into plan cards. Read-only; produces designs and plans, never code."
 tools: Read, Grep, Glob, WebSearch, WebFetch
 ---
-<!-- GENERATED from agents/architect.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/architect.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-software-architect.md -->
 

@@ -3,7 +3,7 @@ name: reviewer
 description: "Use to review one card's or one phase's diff against its card and a fixed checklist. Evidence-gated: approves only what it ran or read, and labels findings blocker, suggestion or nit."
 tools: Bash, Read, Grep, Glob
 ---
-<!-- GENERATED from agents/reviewer.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/reviewer.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: SP@2ce8aa1:skills/subagent-driven-development/task-reviewer-prompt.md, AA@b37b5bb:engineering/engineering-code-reviewer.md, AA@b37b5bb:testing/testing-reality-checker.md -->
 

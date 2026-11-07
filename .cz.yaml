@@ -1,6 +1,7 @@
 commitizen:
   name: cz_customize
-  version_provider: uv
+  version_provider: commitizen
+  version: "0.6.0"
   version_scheme: semver
   major_version_zero: true
   update_changelog_on_bump: true

@@ -3,7 +3,7 @@ name: data-engineer
 description: "Use for dbt on BigQuery, ODCS data contracts, pipelines, backfills and data quality: building or fixing models, contracts, tests and incremental logic under the wraith data rules."
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- GENERATED from agents/data-engineer.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/data-engineer.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-data-engineer.md -->
 

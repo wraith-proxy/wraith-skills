@@ -3,7 +3,7 @@ name: junior-dev
 description: "Use for mechanical edits with no judgement: formatting, renames, regenerating files, copying vendored text with listed replacements, and lint fixes. Writes its output, reads it back, and reports."
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- GENERATED from agents/junior-dev.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/junior-dev.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-minimal-change-engineer.md -->
 

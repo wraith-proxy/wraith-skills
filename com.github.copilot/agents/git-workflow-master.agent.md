@@ -3,7 +3,7 @@ name: git-workflow-master
 description: "Use for git hygiene: branches, worktrees, commit messages in the repository's convention, rebases, cherry-picks and pre-commit failures. Never force-pushes a shared branch or skips hooks."
 tools: Bash, Read, Grep
 ---
-<!-- GENERATED from agents/git-workflow-master.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/git-workflow-master.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-git-workflow-master.md -->
 

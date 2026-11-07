@@ -3,7 +3,7 @@ name: platform-engineer
 description: "Use for GCP infrastructure and delivery: Terraform, Cloud Run services and jobs, IAM, Workload Identity Federation, CI/CD pipelines and cost controls."
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- GENERATED from agents/platform-engineer.md by scripts/build_copilot.py. Do not edit. -->
+<!-- GENERATED from agents/platform-engineer.md by wraith-build-copilot. Do not edit. -->
 
 <!-- source: AA@b37b5bb:engineering/engineering-devops-automator.md, AA@b37b5bb:engineering/engineering-platform-engineer.md, AA@b37b5bb:engineering/engineering-finops-engineer.md -->
 
