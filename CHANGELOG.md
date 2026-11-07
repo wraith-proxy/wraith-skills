@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.1 (2026-11-07)
+
+### Bug Fixes
+
+- move tooling to wraith-tooling so the directory accepts the plugin (#104)
+
 ## v0.6.0 (2026-11-06)
 
 ### Breaking Changes
