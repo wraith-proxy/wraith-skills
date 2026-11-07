@@ -28,7 +28,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-      - uses: wraith-proxy/wraith-tooling@1664b9e76a7efa1b9761945cfa4b4ae389e39ef8 # v0.1.0
+      - uses: wraith-proxy/wraith-tooling@93b9b879d4ec2e5621d8a17a01a5b6a688e85eea # v0.1.1
       - name: bump, tag and release
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}

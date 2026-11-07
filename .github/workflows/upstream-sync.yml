@@ -29,7 +29,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-      - uses: wraith-proxy/wraith-tooling@1664b9e76a7efa1b9761945cfa4b4ae389e39ef8 # v0.1.0
+      - uses: wraith-proxy/wraith-tooling@93b9b879d4ec2e5621d8a17a01a5b6a688e85eea # v0.1.1
       - name: Fetch old and new upstream
         run: |
           wraith-fetch-upstream
@@ -200,7 +200,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: wraith-proxy/wraith-tooling@1664b9e76a7efa1b9761945cfa4b4ae389e39ef8 # v0.1.0
+      - uses: wraith-proxy/wraith-tooling@93b9b879d4ec2e5621d8a17a01a5b6a688e85eea # v0.1.1
       - name: Bundle the named-skill diff
         env:
           KEY: ${{ matrix.target.key }}
@@ -261,7 +261,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app.outputs.token }}
-      - uses: wraith-proxy/wraith-tooling@1664b9e76a7efa1b9761945cfa4b4ae389e39ef8 # v0.1.0
+      - uses: wraith-proxy/wraith-tooling@93b9b879d4ec2e5621d8a17a01a5b6a688e85eea # v0.1.1
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: vet-${{ matrix.target.key }}

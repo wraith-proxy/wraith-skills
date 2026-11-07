@@ -1,3 +1,5 @@
+default_language_version:
+  python: python3.12
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -26,7 +28,7 @@ repos:
     -   id: detect-secrets
         args: ['--baseline', '.secrets.baseline.json']
 -   repo: https://github.com/wraith-proxy/wraith-tooling
-    rev: 1664b9e76a7efa1b9761945cfa4b4ae389e39ef8
+    rev: 93b9b879d4ec2e5621d8a17a01a5b6a688e85eea
     hooks:
     -   id: wraith-lint-skills
     -   id: wraith-build-copilot
