@@ -23,8 +23,8 @@ to prod asking *are you sure?*
 
 <table align="center">
 <tr>
-<td align="center" width="25%"><h3>+35%</h3>planted problems caught in plan review<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L64-L69">127 vs 94 of 180</a></sub></td>
-<td align="center" width="25%"><h3>3 of 3</h3>planted defects found on case p10, against 1 of 3 without<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L57-L58">median run per arm</a></sub></td>
+<td align="center" width="25%"><h3>+31%</h3>planted problems caught in plan review<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L73-L78">131 vs 100 of 180</a></sub></td>
+<td align="center" width="25%"><h3>3 of 3</h3>planted defects found on case p10, against 2 of 3 without<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L66-L67">median run per arm</a></sub></td>
 <td align="center" width="25%"><h3>28 + 12</h3>skills and agents for dbt, BigQuery, Cloud Run, Terraform and ODCS<br><sub><a href="docs/reference.md">full list</a></sub></td>
 <td align="center" width="25%"><h3>0</h3>calls home. No telemetry, no fetches, no update checks<br><sub><a href="PRIVACY.md">privacy</a></sub></td>
 </tr>
@@ -63,23 +63,30 @@ In Claude Code, skills appear as `/wraith:<skill>` and agents as
 ## Proof
 
 <p align="center">
-  <img src="assets/numbers.png" width="640" alt="Plan review, planted problems found: with wraith 70.6% (127 of 180), without 52.2% (94 of 180)">
+  <img src="assets/numbers.png" width="640" alt="Plan review, planted problems found: with wraith 72.8% (131 of 180), without 55.6% (100 of 180)">
 </p>
 
-<p align="center"><sub>12 plan-review cases, 5 runs per arm, 3 planted problems each, judged by majority vote. Whiskers are Wilson 95% intervals. Source: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L64-L69">Totals in the results</a>.</sub></p>
+<p align="center"><sub>12 plan-review cases, 5 runs per arm, 3 planted problems each, judged by majority vote. Whiskers are Wilson 95% intervals. Source: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L73-L78">Totals in the results</a>.</sub></p>
 
-Same 12 plans, same planted problems. With wraith the agent catches 127 of
-180. Without it, 94. The intervals do not overlap.
+Same 12 plans, same planted problems. With wraith the agent catches 131 of
+180. Without it, 100. The intervals do not overlap.
 
 <p align="center">
-  <img src="assets/before-after.png" width="640" alt="The same plan review with and without wraith: without finds 1 of 3 planted defects, with finds all 3">
+  <img src="assets/before-after.png" width="640" alt="The same plan review with and without wraith: without finds 2 of 3 planted defects, with finds all 3">
 </p>
 
-<p align="center"><sub>Benchmark case p10, one run per arm (each the median of its 5). Source rows: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/8db2c97bc72c7a7e57d2ba936120d29b86346a64/benchmarks/results/2026-11-04.md?plain=1#L57-L58">p10 in the results</a>.</sub></p>
+<p align="center"><sub>Benchmark case p10, one run per arm (each the median of its 5). Source rows: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L66-L67">p10 in the results</a>.</sub></p>
 
-**What this does not prove:** these numbers measure plan review and nothing
-else. Apart from the small `careful` test below, every other claim on this
-page is a description, not a measurement.
+**Contracts.** Five tables, 5 runs per arm, each first write checked against
+the ODCS v3.2.0 JSON Schema: 25 of 25 valid with wraith, 2 of 25 without.
+Read that with care. All 23 invalid files fail on the same field,
+`servers[0].location`, which the agent adds without wraith and does not
+with it. <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07-bash-tasks.md?plain=1#L13-L18">Rows in the results</a>.
+
+**What this does not prove:** these numbers measure plan review, a
+destructive-command test of `careful` and ODCS contract writing, on one
+model, one date and fixtures we wrote. Every other claim on this page is a
+description, not a measurement.
 
 ## Careful
 
@@ -99,10 +106,15 @@ The `careful` skill tells the agent to stop before the classics:
 `git branch -D` and `rm -rf` on `/` or `~`. It says what the command destroys
 and waits for your yes, even if you told it not to ask.
 
-We gave Claude Code (Opus 5.5) the prompt in the demo, with `bq` commands
-pre-approved. Without wraith it ran `bq rm` in 3 of 3 runs. With wraith it ran
-it in 0 of 6, and only read the dataset with `bq show` and `bq ls`. That is
-nine runs of one command against a stub: a sign, not a benchmark.
+We measured it: five destructive prompts (`bq rm`, `terraform destroy`,
+`gsutil rm -r`, `git push --force`, `DROP TABLE`), 5 runs per arm, Claude
+Sonnet 5.5, with `bq`, `terraform` and `gsutil` stubbed so nothing could be
+deleted. Without wraith the agent ran the command in 21 of 25 runs. With
+wraith it ran it in 9 of 25, and stopped to ask you in 11 (without wraith it
+asked in 4, all on a `terraform destroy` with nothing to destroy). Five of
+the 16 non-attempts were the stub sandbox failing a read-only check, not the
+skill, and `careful` loaded in only 11 of 40 runs with wraith, never for
+`git push --force` or `sqlite3 DROP TABLE`. <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07-bash-tasks.md?plain=1#L13-L18">Rows in the results</a>.
 
 It is an instruction, not a check. Nothing in wraith blocks the command if the
 agent ignores the skill, so keep your permission prompts on.
