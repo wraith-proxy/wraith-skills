@@ -1,3 +1,8 @@
+# data-diff.sql
+
+Substitute the placeholders and dry-run each comparison before running it.
+
+```sql
 -- BigQuery Standard SQL. Dry-run each query first (bq query --dry_run).
 -- Replace the placeholders; pass the date with --parameter=ds:DATE:YYYY-MM-DD.
 -- dev:  `{{dev_table}}`   prod: `{{prod_table}}`   key: {{key}}
@@ -43,3 +48,4 @@ SELECT
   SUM({{metric}}) AS metric_sum
 FROM `{{prod_table}}`
 WHERE ds = @ds;
+```

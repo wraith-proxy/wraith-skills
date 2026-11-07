@@ -1,3 +1,8 @@
+# cost-queries.sql
+
+Substitute `<bigquery_location>` and dry-run each query before running it.
+
+```sql
 -- Substitute <bigquery_location> (from the wraith block) in each region
 -- qualifier before running. Dry-run first, then cap with
 -- --maximum_bytes_billed.
@@ -54,3 +59,4 @@ LEFT JOIN used AS u
   AND u.table_id = t.table_name
 WHERE t.table_type = 'BASE TABLE'
   AND u.table_id IS NULL;
+```

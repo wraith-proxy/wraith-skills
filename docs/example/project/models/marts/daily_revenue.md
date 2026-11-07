@@ -1,3 +1,8 @@
+# daily_revenue.sql
+
+Save this block as `models/marts/daily_revenue.sql` in the dbt project.
+
+```sql
 {{ config(
     partition_by={'field': 'order_date', 'data_type': 'date'}
 ) }}
@@ -9,3 +14,4 @@ select
     countif(currency != 'GBP') as orders_other_currency
 from {{ ref('stg_orders') }}
 group by 1, 2
+```

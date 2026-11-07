@@ -44,7 +44,7 @@ bq query --dry_run --use_legacy_sql=false --project_id=<gcp_project_dev> '<sql>'
 bq query --use_legacy_sql=false --project_id=<gcp_project_dev> --maximum_bytes_billed=<dev_max_bytes_billed> '<sql>'
 ```
 
-Cost queries: substitute `<bigquery_location>` in [cost-queries.sql](references/cost-queries.sql), then dry-run each one first.
+Cost queries: substitute `<bigquery_location>` in [cost-queries.md](references/cost-queries.md), then dry-run each one first.
 Changes to `gcp_project_prod`, datasets (`terraform_dir`) or spend above the cap need the user's go-ahead in this conversation.
 
 ## Vendor skills
@@ -67,6 +67,6 @@ Where they and this skill disagree, this skill wins for dry runs and cost caps, 
 
 ## References
 
-- [cost-queries.sql](references/cost-queries.sql): four INFORMATION_SCHEMA.JOBS cost queries.
+- [cost-queries.md](references/cost-queries.md): four INFORMATION_SCHEMA.JOBS cost queries.
 - [crypto-shredding.md](references/crypto-shredding.md): erasure by key deletion; classification comes from wraith:odcs-contracts.
 - Related: wraith:dbt-bigquery for tables, wraith:terraform-gcp for datasets.

@@ -1,3 +1,8 @@
+# template.sh
+
+Copy the block into a new `.sh` file and fill the placeholders.
+
+```bash
 #!/usr/bin/env bash
 # source: MP@d1478fc:skills/engineering/wizard/template.sh
 #
@@ -236,3 +241,4 @@ finish
 }
 
 run_wizard "$@"; exit
+```
