@@ -28,7 +28,7 @@ repos:
     -   id: detect-secrets
         args: ['--baseline', '.secrets.baseline.json']
 -   repo: https://github.com/wraith-proxy/wraith-tooling
-    rev: 93b9b879d4ec2e5621d8a17a01a5b6a688e85eea
+    rev: 58a514dfb54f580cfe14df1cb18106a4d3d4a6e8
     hooks:
     -   id: wraith-lint-skills
     -   id: wraith-build-copilot
