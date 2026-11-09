@@ -31,7 +31,7 @@ Check each one, do not assume it. Read `qa.md` for the verdict. Confirm the merg
 
 - Follow the wraith:cloud-run rollout.
 - Hold 10 percent for 10 minutes, 50 percent for 10 minutes, then 100 percent, watching the 5xx rate, p95 latency and ERROR logs at each step.
-- On a breach, roll back immediately, then use wraith:systematic-debugging.
+- On a breach, roll back immediately, then follow "When it fails" in wraith:cloud-run or wraith:dbt-bigquery.
 
 The rollout is: write the rollback, deploy the image by digest with `--no-traffic` and a tag, smoke test the tag URL, then shift traffic. Use `<service>`, `<gcp_project_prod>` and `<region>` from the settings.
 
@@ -57,7 +57,7 @@ Details:
 - The job is `<job>` in `<gcp_project_prod>` and `<region>`. The target is `dbt_target_prod`. Follow the job pattern in wraith:cloud-run.
 - Pin the image by digest. Record the previous digest in deploy.md as part of the rollback.
 - Do not run the job against prod from a local shell unless the project defines that path.
-- A failed execution is not retried blindly. Read the logs, then use wraith:systematic-debugging.
+- A failed execution is not retried blindly. Read the logs, then follow "When it fails" in wraith:cloud-run or wraith:dbt-bigquery.
 - If the plan states no row-count threshold, ask the user for one before the run, not after.
 
 ## Post-deploy watch
