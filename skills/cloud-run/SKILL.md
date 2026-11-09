@@ -74,6 +74,23 @@ Some of these skills add an attribution tag to what they generate. Tell the user
 
 Where they and this skill disagree, this skill wins for identity, secrets, private-by-default ingress and the rollout (rules 2, 3, 4 and 8).
 
+## Review checklist
+
+- a dedicated service account
+- no `allUsers` invoker unless the plan says public
+- secrets from Secret Manager
+- max instances set
+- image deployed by digest
+- health endpoint does not touch dependencies
+
+## When it fails
+
+- A revision that will not start: not listening on `$PORT`, wrong image architecture, missing secret access, or a failing startup probe.
+- 5xx: read `gcloud logging read 'resource.type="cloud_run_revision" AND severity>=ERROR' --project <p> --freshness=1h`.
+- 429: max instances or concurrency is too low for the load.
+- Memory limit exceeded: raise the limit or reduce per-request memory.
+- Request timeout versus task timeout: services and jobs have different limits; check which one fired.
+
 ## References
 
 - [references/dbt-job.md](references/dbt-job.md): Dockerfile, profiles.yml, job commands and Scheduler trigger for a dbt Cloud Run Job (see also wraith:dbt-bigquery).
