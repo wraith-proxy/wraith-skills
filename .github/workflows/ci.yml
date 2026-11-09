@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: wraith-proxy/wraith-tooling@b1b679614c2a4601363208459461daf036200559 # v0.1.2
+      - uses: wraith-proxy/wraith-tooling@22c86c0cd32ec98d85b7be813172bc134b9c50f3 # v0.1.2
       # The PR title becomes the squash subject, and that alone decides a
       # release (#89). The title arrives through env, never as code.
       - name: PR title is a valid squash subject
