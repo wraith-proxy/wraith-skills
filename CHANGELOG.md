@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.0 (2026-11-09)
+
+### Breaking Changes
+
+- trim wraith to data and GCP skills, process skills become companions (#110)
+
 ## v0.7.1 (2026-11-09)
 
 ### Bug Fixes
