@@ -124,3 +124,7 @@ keywords). The packer manifest adds display text for another host. Neither
 declares hooks, MCP servers or commands, and the install commands above do
 not install packer. Verdicts unchanged. The owner accepts the bump by
 merging it.
+
+## Addendum 2026-11-09: review removed (ADR 0006)
+
+wraith:review no longer exists. `terraform-style-guide` is now named in the wraith:terraform-gcp review checklist. The text above keeps its original wording as history.

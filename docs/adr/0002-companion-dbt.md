@@ -100,3 +100,7 @@ other plugins in the same repository and are not installed by these commands.
 - The companion is optional. Every wraith skill works with the companion
   absent and says so.
 - If the pinned ref moves, this ADR is re-run before the pointers change.
+
+## Addendum 2026-11-09: tdd removed (ADR 0006)
+
+wraith:tdd no longer exists. `adding-dbt-unit-test` is now named by wraith:dbt-bigquery, beside its `references/data-tests.md`. The text above keeps its original wording as history.
