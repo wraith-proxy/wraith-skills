@@ -1,7 +1,7 @@
 {
   "name": "wraith",
   "displayName": "wraith",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Agents don't hesitate before prod. wraith is the ghost that does. Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies.",
   "author": {"name": "wraith-proxy", "url": "https://github.com/wraith-proxy"},
   "homepage": "https://github.com/wraith-proxy/wraith-skills",

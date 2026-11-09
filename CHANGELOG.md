@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.3 (2026-11-09)
+
+### Bug Fixes
+
+- list the services skills contact in the listing README (#113)
+
 ## v0.8.2 (2026-11-09)
 
 ### Bug Fixes
