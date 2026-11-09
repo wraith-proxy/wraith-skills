@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       vet: ${{ steps.drift.outputs.vet }}
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - id: app
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
@@ -29,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
+      - uses: wraith-proxy/wraith-tooling@b1b679614c2a4601363208459461daf036200559 # v0.1.2
       - name: Fetch old and new upstream
         run: |
           wraith-fetch-upstream
@@ -94,24 +92,6 @@ jobs:
             --title "👻 $type/WSK-00010: sync upstream ${KEYS:-report only}" \
             --body-file sync-report.md)
           echo "url=$url" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        if: steps.sync.outputs.code == '10' && steps.pr.outputs.url != '' && env.ANTHROPIC_API_KEY != ''
-        with:
-          node-version: 22
-      - name: Trigger evals
-        id: evals
-        if: steps.sync.outputs.code == '10' && steps.pr.outputs.url != ''
-        run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "ANTHROPIC_API_KEY not set; evals skipped."
-            echo "ok=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          npm install -g @anthropic-ai/claude-code@2.1.316
-          ok=true
-          claude plugin eval . --trust-plugin --ablation none \
-            --tag trigger --max-cost-usd 5 || ok=false
-          echo "ok=$ok" >> "$GITHUB_OUTPUT"
       - name: Flag risky syncs
         if: steps.pr.outputs.url != '' && (steps.sync.outputs.code != '10' || steps.evals.outputs.ok == 'false')
         env:
@@ -200,7 +180,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
+      - uses: wraith-proxy/wraith-tooling@b1b679614c2a4601363208459461daf036200559 # v0.1.2
       - name: Bundle the named-skill diff
         env:
           KEY: ${{ matrix.target.key }}
@@ -211,23 +191,6 @@ jobs:
           $vet fetch --key "$KEY" --sha "$SHA" --dest vet/new
           $vet bundle --key "$KEY" --old vet/old --new vet/new --out vet/bundle
           $vet prompt --bundle vet/bundle > vet/prompt.txt
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 22
-      - name: Machine read
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "ANTHROPIC_API_KEY not set; the re-vet stays unread"
-            exit 0
-          fi
-          npm install -g @anthropic-ai/claude-code@2.1.316
-          cd vet
-          claude -p --bare --tools "" --no-session-persistence \
-            --output-format json --model claude-sonnet-5-5 \
-            --max-budget-usd 1 < prompt.txt > raw.json \
-            || echo "machine read failed; the re-vet stays unread"
       - name: Check the verdict
         run: |
           wraith-vet-companion verdict \
@@ -261,7 +224,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app.outputs.token }}
-      - uses: wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 # v0.1.2
+      - uses: wraith-proxy/wraith-tooling@b1b679614c2a4601363208459461daf036200559 # v0.1.2
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: vet-${{ matrix.target.key }}

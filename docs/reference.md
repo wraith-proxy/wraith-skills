@@ -2,44 +2,18 @@
 
 Back to the [README](../README.md).
 
-## The sprint
+## Artifacts
 
-| Phase | Skill | Writes (in your project) | Hands to |
-|---|---|---|---|
-| Think | `brainstorming` | `docs/wraith/<date>-<topic>/design.md` | `writing-plans` |
-| Plan | `writing-plans` | `.../plan.md` | `plan-data-review`, `plan-infra-review` |
-| Plan | `plan-data-review` | appends `## Data review` to plan.md | `orchestrating-agents` |
-| Plan | `plan-infra-review` | appends `## Infra review` to plan.md | `orchestrating-agents` |
-| Plan | `grilling` | nothing (conversation) | any |
-| Build | `orchestrating-agents` | commits, `.../progress.md` | `review` |
-| Build | `tdd`, `systematic-debugging`, `verification-before-completion` | tests, evidence | |
-| Build | `odcs-contracts`, `dbt-bigquery`, `bigquery`, `cloud-run`, `terraform-gcp`, `ontology-modeling`, `context-layer` | domain files | |
-| Review | `review` | `.../review.md` | `qa` |
-| Review | `security-audit` | `.../security.md` | `qa` |
-| Test | `qa` | `.../qa.md` (evidence) | `ship` |
-| Ship | `ship` | changelog, version bump, PR body | `deploy` |
-| Ship | `deploy` | `.../deploy.md` | `handoff` |
-| Reflect | `handoff` | `.../handoff.md` | |
-| Reflect | `knowledge-base` | knowledge files, GLOSSARY.md, ADRs | |
-| Safety | `careful` | nothing (conversation) | |
-| Meta | `using-wraith`, `setup`, `writing-skills` | AGENTS.md `## wraith` block (setup) | |
-
-Sprint artifacts go to `docs/wraith/<YYYY-MM-DD>-<topic>/` by default.
+Skills that write files put them under `docs/wraith/<YYYY-MM-DD>-<topic>/` by default (`artifacts_dir` in the wraith block). The plan reviews append `## Data review` or `## Infra review` to the plan, `security-audit` writes `security.md`, `qa` writes `qa.md` and `deploy` writes `deploy.md`.
 
 ## Skills
 
-| Name | Phase | Purpose |
+| Name | Area | Purpose |
 |---|---|---|
-| using-wraith | Meta | Routes work to the right wraith skill and states house rules |
-| brainstorming | Think | Turns a request into an approved design doc |
-| writing-plans | Plan | Writes phased plans of model-tagged cards agents can execute |
-| grilling | Plan | Stress-tests a plan, decision or idea with relentless questions |
+| using-wraith | Meta | Lists the wraith skills and agents and the rules they share |
+| setup | Meta | Records project values in an AGENTS.md wraith block |
 | plan-data-review | Plan | Reviews data plans for grain, contracts, cost, personal data, rollback |
 | plan-infra-review | Plan | Reviews GCP infrastructure plans for identity, ingress, rollback, blast radius |
-| orchestrating-agents | Build | Runs a plan's cards through fresh subagents with checked results |
-| tdd | Build | Test-first Python, SQL and dbt with behaviour-level tests |
-| systematic-debugging | Build | Finds the root cause through a fast reproduction loop |
-| verification-before-completion | Build | Requires quoted verification output before claiming work is done |
 | odcs-contracts | Build | Writes and validates ODCS v3.2.0 data contracts |
 | dbt-bigquery | Build | Builds, tests and runs dbt models on BigQuery safely |
 | bigquery | Build | BigQuery cost, performance, access control and personal-data handling |
@@ -47,33 +21,20 @@ Sprint artifacts go to `docs/wraith/<YYYY-MM-DD>-<topic>/` by default.
 | terraform-gcp | Build | Writes and applies GCP Terraform with a safe plan workflow |
 | ontology-modeling | Build | Models business entities and relations in a YAML source of truth |
 | context-layer | Build | Prepares warehouses for AI agents and text-to-SQL |
-| review | Review | Reviews diffs against repository standards and the plan |
 | security-audit | Review | Audits IAM, secrets, ingress and personal data, with evidence |
 | qa | Test | Proves a data or infrastructure change against a dev target |
-| ship | Ship | Runs final checks, writes the PR body, integrates your chosen route |
 | deploy | Ship | Rolls out to production with traffic splits and a rollback plan |
-| handoff | Reflect | Narrates decisions and writes a handover doc for a fresh session |
-| knowledge-base | Reflect | Records quirks, conventions and decisions so they survive the session |
 | careful | Safety | Makes the agent stop and confirm before destructive commands |
-| setup | Meta | Records project commands and targets in an AGENTS.md wraith block |
-| writing-skills | Meta | Creates and edits skills, agents, AGENTS.md and CLAUDE.md |
 
 ## Agents
 
 | Name | Model | Use for |
 |---|---|---|
-| architect | opus | Designing and planning non-trivial work; read-only, never writes code |
-| implementer | sonnet | Executing exactly one plan card with one commit |
-| reviewer | sonnet | Reviewing one card or phase against a fixed checklist |
-| tester | sonnet | Writing behaviour-level pytest, dbt unit and data tests |
-| junior-dev | haiku | Mechanical edits: formatting, renames, regenerating files, lint fixes |
 | data-engineer | sonnet | dbt on BigQuery, ODCS contracts, pipelines, backfills, data quality |
 | platform-engineer | sonnet | Terraform, Cloud Run, IAM, Workload Identity Federation, CI/CD |
 | sre | sonnet | Observability, alerts, SLOs, incident triage, runbooks, post-mortems |
 | security-engineer | sonnet | Security and privacy review of GCP and data work |
 | ontologist | sonnet | Ontology and context-layer work, question-to-SQL pairs |
-| docs-writer | haiku | READMEs, MkDocs pages, docstrings, ADRs and CLI help |
-| git-workflow-master | haiku | Git hygiene: branches, worktrees, commit messages, rebases |
 
 ## Companions
 
@@ -145,11 +106,58 @@ copilot plugin install terraform@hashicorp
 wraith recommends `terraform-style-guide`, `terraform-test`, `refactor-module`
 and `terraform-search-import`.
 
+### Superpowers (general workflow)
+
+obra/superpowers covers designs, plans, plan execution, test-first work, debugging, verification, code review and finishing a branch. It installs a SessionStart hook of its own.
+
+Claude Code:
+
+```bash
+claude plugin install superpowers@claude-plugins-official
+```
+
+Copilot CLI:
+
+```bash
+copilot plugin marketplace add obra/superpowers-marketplace
+copilot plugin install superpowers@superpowers-marketplace
+```
+
+wraith recommends `brainstorming`, `writing-plans`, `executing-plans`,
+`subagent-driven-development`, `dispatching-parallel-agents`,
+`using-git-worktrees`, `test-driven-development`, `systematic-debugging`,
+`verification-before-completion`, `requesting-code-review`,
+`receiving-code-review`, `finishing-a-development-branch` and
+`writing-skills`. Run wraith:plan-data-review or wraith:plan-infra-review on
+the plan that `writing-plans` writes before building it.
+
+### Matt Pocock (general workflow)
+
+mattpocock/skills covers test-first work, debugging, grilling, handoffs, domain modeling, code review and PR bodies.
+
+Claude Code:
+
+```bash
+claude plugin install mattpocock-skills@claude-plugins-official
+```
+
+Copilot CLI:
+
+```bash
+copilot plugin marketplace add mattpocock/skills
+copilot plugin install mattpocock-skills@mattpocock
+```
+
+wraith recommends `tdd`, `diagnosing-bugs`, `grilling`, `handoff`,
+`domain-modeling`, `code-review`, `setup-matt-pocock-skills`, `pr` and
+`writing-for-agents`. The plugin also installs `wizard`, which wraith does
+not recommend because it writes captured secrets to `.env` and GitHub.
+
 ### Notes on companions
 
 - Vendor skills run with your agent's full permissions. Skim each SKILL.md before installing, especially anything that can run `terraform apply` or touch production.
 - `npx skills` may install into `.agents/skills/`, which Claude Code may not read. Check where the files landed. Copilot reads `.github/skills/`, `.claude/skills/` and `.agents/skills/`.
 - Google marks its skills as under active development. Keep them away from production without a plan review (wraith:plan-infra-review).
-- wraith reviewed these companions at the refs recorded in docs/adr/0002 to 0004. Newer versions have not been reviewed by this project.
-- When a skill wraith names changes upstream, the nightly sync opens a `re-vet` issue and the bot drafts a pull request with the pin bump, the diff, an automated scan and a machine read by a model with no tools. Nothing merges it automatically: the maintainer's merge is the review.
+- wraith reviewed these companions at the refs recorded in docs/adr/0002 to 0004 and 0006. Newer versions have not been reviewed by this project.
+- When a skill wraith names changes upstream, the nightly sync opens a `re-vet` issue and the bot drafts a pull request with the pin bump, the diff and an automated scan. Nothing merges it automatically: the maintainer's merge is the review.
 - MCP servers (dbt, Google) are set up per project with the vendors' own skills.

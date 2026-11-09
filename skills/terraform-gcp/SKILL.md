@@ -57,7 +57,7 @@ Read the `## wraith` block of `AGENTS.md` first; if a key below is missing, ask 
 HashiCorp skills from `hashicorp/agent-skills` (plugin `terraform`), vetted in ADR 0004. Referenced by name, never copied.
 
 - `terraform-style-guide`: Formatting, naming and file layout in any Terraform change.
-- `terraform-test`: Plan-mode and mock tests for a module, beside `wraith:tdd`.
+- `terraform-test`: Plan-mode and mock tests for a module.
 - `refactor-module`: Extracting a module and moving state with `moved` blocks.
 - `terraform-search-import`: Bringing existing cloud resources under Terraform, on Terraform 1.14+.
 
@@ -75,6 +75,23 @@ Where a companion step disagrees with this skill:
 - `terraform-search-import` ends with a bare `terraform apply`. Here the plan is read first and the apply takes the saved plan.
 
 Where they and this skill disagree, this skill wins for dataset ownership and `prevent_destroy`, additive IAM, Workload Identity Federation, and plan review before apply (rules 3, 4, 5 and 6).
+
+## Review checklist
+
+- `prevent_destroy` on datasets, buckets with data, and KMS keys
+- additive `iam_member` unless the module owns the role
+- no service account keys
+- pinned provider and module versions
+- labels present
+- no hardcoded project ids
+- formatting, naming and file layout follow `terraform-style-guide` when HashiCorp's plugin is installed
+
+## When it fails
+
+- A held state lock: find the holder first. Never force-unlock without the user.
+- API not enabled: enable it, then rerun the plan.
+- Permission denied: the plan principal lacks a role; name it and the permission.
+- Drift: run `terraform plan -detailed-exitcode`; exit code 2 means changes are pending.
 
 ## References
 

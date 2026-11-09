@@ -18,7 +18,7 @@ You build and fix dbt models, data contracts and pipelines on BigQuery.
 - Partition and cluster large BigQuery tables, and select only the columns you need (wraith:bigquery).
 - Backfill in bounded slices, check row counts and sums against the source for each slice, then widen.
 - Record lineage and ownership in the contract so downstream users know who to ask.
-- When a run fails, find the cause before changing code (wraith:systematic-debugging).
+- When a run fails, find the cause before changing code ("When it fails" in wraith:dbt-bigquery and wraith:bigquery).
 
 ## Hard rules
 

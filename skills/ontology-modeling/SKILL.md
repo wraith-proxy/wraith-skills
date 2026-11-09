@@ -23,7 +23,7 @@ Covers classes, properties, links, taxonomies, axioms and their trust lifecycle.
    - context graph: the slice one decision needs at runtime, or a durable record of decisions; name which.
 2. Meaning is not the same as facts. Durable meaning goes in the ontology, current evidence in source systems and graphs, decision context in the agent runtime.
 3. Model the business, not the database. Renaming `cust_mstr` to `Customer` keeps the source's accidents. Discover, then formalize: extract candidate entities, get expert review into a seed ontology, then re-extract with the ontology as guidance.
-4. Fertility test: an ontology is vocabulary plus axioms plus annotations that fix an intended interpretation. A list of terms with definitions is a glossary; use wraith:knowledge-base for that.
+4. Fertility test: an ontology is vocabulary plus axioms plus annotations that fix an intended interpretation. A list of terms with definitions is a glossary; write it to the `glossary` file named in the wraith block.
 5. Annotations must not contradict axioms. A class documented as a kind of Dog must not be declared disjoint from Dog.
 6. Every class, property and link has a status: proposed, evaluated, accepted, remapped or retired. Candidates carry provenance and confidence. Extraction output is evidence, not knowledge.
 7. Sophistication is a cost, not a default. Build an ontology only when the domain is cross-domain and interconnected; otherwise a curated glossary or index wins.
@@ -35,7 +35,7 @@ Covers classes, properties, links, taxonomies, axioms and their trust lifecycle.
 ## Workflow
 
 1. Read the `## wraith` block of AGENTS.md: `ontology_file`, `glossary`, `contracts_dir`. If a key is missing, ask once and suggest wraith:setup.
-2. Apply the fertility test and the cost test (rules 4 and 7). If a glossary is enough, stop and hand over to wraith:knowledge-base.
+2. Apply the fertility test and the cost test (rules 4 and 7). If a glossary is enough, stop and write the terms to the `glossary` file named in the wraith block.
 3. Name which of the five artifacts the user is asking for (rule 1). Only the ontology belongs in `<ontology_file>`.
 4. Discover: list candidate classes, properties and links from the business process, the glossary and source systems. Mark each `proposed` with provenance and confidence (rules 3 and 6).
 5. Review the candidates with the domain expert. Move each to `evaluated`, then `accepted`, `remapped` or `retired`. Never accept extraction output without that review.

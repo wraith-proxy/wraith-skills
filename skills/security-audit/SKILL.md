@@ -57,7 +57,7 @@ Work through every item. For each, state how you checked it and what you found.
    How to check: read the ODCS contracts for classification, find the key or
    shred mechanism, find the retention setting on raw tables, and read the
    project audit config for BigQuery data access logs.
-6. CI/CD: Workload Identity Federation, a least-privilege deploy service account, `permissions:` blocks, branch protection on main.
+6. CI/CD: Workload Identity Federation, a least-privilege deploy service account, `permissions:` blocks, branch protection on main, and every third-party action pinned by full SHA.
 
    How to check: read the workflows for credential JSON secrets versus
    WIF, a top-level `permissions:` block per workflow, the deploy account's

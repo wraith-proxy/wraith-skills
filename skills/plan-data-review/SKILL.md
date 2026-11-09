@@ -10,8 +10,8 @@ metadata:
 
 ## When to use
 
-After wraith:writing-plans, when the plan touches dbt models, ODCS contracts, BigQuery tables, pipelines or backfills.
-Runs before wraith:orchestrating-agents.
+When a written plan, by any author, touches dbt models, ODCS contracts, BigQuery tables, pipelines or backfills.
+Runs before anyone builds the plan.
 
 ## Step 0: attack the premise
 
@@ -41,12 +41,12 @@ Append `## Data review (<YYYY-MM-DD>)` to the plan, containing:
 
 Then one verdict line: `Verdict: READY`, `Verdict: READY WITH CHANGES` or `Verdict: NOT READY`.
 
-Blockers are resolved in the plan before wraith:orchestrating-agents runs.
+Blockers are resolved in the plan before anyone builds it.
 
 ## Workflow
 
 1. Read the `## wraith` block of AGENTS.md: `artifacts_dir`, `contracts_dir`, `dbt_project_dir`, `gcp_project_dev`, `bigquery_location`, `dev_max_bytes_billed`. If a key is missing, ask once and suggest wraith:setup.
-2. Read the plan at `<artifacts_dir>/<YYYY-MM-DD>-<topic>/plan.md` and every contract and model it names.
+2. Read the plan the user names; otherwise the newest `plan.md` under `<artifacts_dir>`; otherwise ask for the path. Read every contract and model it names.
 3. Run Step 0.
 4. Walk the checklist in order. An item the plan does not address is a finding, never a pass. Use wraith:odcs-contracts for item 2, wraith:dbt-bigquery for items 3 to 5 and 8, and wraith:bigquery for items 6 and 7.
 5. For item 6, dry-run each new or changed query and multiply the bytes by runs per day.
@@ -76,6 +76,5 @@ They ask the agent to set an attribution tag that reports usage to Google; tell 
 
 ## References
 
-- wraith:writing-plans for the plan format and location.
 - wraith:odcs-contracts, wraith:dbt-bigquery and wraith:bigquery for the rules each item checks against.
 - wraith:plan-infra-review when the plan also changes GCP infrastructure.

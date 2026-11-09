@@ -1,14 +1,14 @@
 # wraith-skills
 
 wraith is a plugin of skills and agents for data and infrastructure
-engineering on GCP, run as a plan, build, review, ship sprint.
+engineering on GCP.
 It serves Claude Code and GitHub Copilot from one repository.
 
 ## Commands
 
 - `uvx --python 3.12 pre-commit run --all-files` (lint, copilot check, privacy scan,
   file types and plugin checks, all from wraith-tooling)
-- `uvx --from git+https://github.com/wraith-proxy/wraith-tooling@58a514dfb54f580cfe14df1cb18106a4d3d4a6e8 wraith-build-copilot`
+- `uvx --from git+https://github.com/wraith-proxy/wraith-tooling@b1b679614c2a4601363208459461daf036200559 wraith-build-copilot`
 - `claude plugin validate --strict .`
 - `claude plugin eval .`
 

@@ -49,8 +49,8 @@ Project values come from the `## wraith` block of AGENTS.md.
    once and suggest wraith:setup.
 2. Read the contract in `<contracts_dir>`; mapping to models and tests is in
    wraith:odcs-contracts.
-3. Write the test first (wraith:tdd): contract-derived tests and a unit test
-   for non-trivial logic.
+3. Write the test first, following `references/data-tests.md`:
+   contract-derived tests and a unit test for non-trivial logic.
 4. Write the model in its layer using the patterns in `references/patterns.md`.
 5. Run against `<dbt_target_dev>` only, from `<dbt_project_dir>`.
 6. Scan output with the rule 18 pattern; fix and rerun.
@@ -73,12 +73,32 @@ When dbt Labs' dbt plugin is installed, use its skills for generic dbt mechanics
 
 - `running-dbt-commands`: any dbt command run from a wraith skill.
 - `using-dbt-for-analytics-engineering`: everyday dbt model work.
-- `adding-dbt-unit-test`: test-first work on a dbt model, beside wraith:tdd.
+- `adding-dbt-unit-test`: test-first work on a dbt model, beside `references/data-tests.md`.
 - `maintaining-dbt-documentation`: backfilling model and column descriptions, with review.
 
 Where they and this skill disagree, this skill wins for contract-first models, ds snapshots and SCD2, BigQuery cost guards and production safety (rules 3, 4, 9 and 16).
+
+## Review checklist
+
+- grain stated in the model description
+- no `SELECT *` in models
+- partition filter on large sources
+- `SAFE_DIVIDE` for ratios
+- optional relations use LEFT JOIN, so orphans surface as NULL
+- incremental models set `on_schema_change: fail`
+- no hardcoded date literals (use vars or `ds`)
+- a test for every contract quality rule
+- marts have the contract enforced
+
+## When it fails
+
+- Compile errors happen before any SQL runs; runtime errors come from the warehouse. Read `target/run_results.json` and `logs/dbt.log` for the failing node.
+- Match `ERROR creating|ERROR in|Database Error|Compilation Error`, never bare `ERROR`: the summary line prints `ERROR=0` on success.
+- Connection problems: run `dbt debug`.
+- Rerun just the failing model with `--select <model>` to keep the loop fast.
 
 ## References
 
 - [Patterns](references/patterns.md): raw merge, `ds` snapshot, SCD2 rebuild, dev profile.
 - [CI](references/ci.md): `dbt deps`, slim build, Workload Identity Federation.
+- [Data tests](references/data-tests.md): generic tests from contract rules, unit tests, golden files, backtests.

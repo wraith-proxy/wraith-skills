@@ -10,8 +10,8 @@ metadata:
 
 ## When to use
 
-After wraith:writing-plans, when the plan touches Cloud Run, Terraform, IAM, networking, secrets, schedulers or CI deploys.
-Runs before wraith:orchestrating-agents.
+When a written plan, by any author, touches Cloud Run, Terraform, IAM, networking, secrets, schedulers or CI deploys.
+Runs before anyone builds the plan.
 
 ## Step 0: attack the premise
 
@@ -41,12 +41,12 @@ Append `## Infra review (<YYYY-MM-DD>)` to the plan, containing:
 
 Then one verdict line: `Verdict: READY`, `Verdict: READY WITH CHANGES` or `Verdict: NOT READY`.
 
-Blockers are resolved in the plan before wraith:orchestrating-agents runs.
+Blockers are resolved in the plan before anyone builds it.
 
 ## Workflow
 
 1. Read the `## wraith` block of AGENTS.md: `artifacts_dir`, `gcp_project_dev`, `gcp_project_prod`, `region`, `bigquery_location`, `deploy_method`, `terraform_dir`. If a key is missing, ask once and suggest wraith:setup.
-2. Read the plan at `<artifacts_dir>/<YYYY-MM-DD>-<topic>/plan.md` and the Terraform or service definitions it names.
+2. Read the plan the user names; otherwise the newest `plan.md` under `<artifacts_dir>`; otherwise ask for the path. Read the Terraform or service definitions it names.
 3. Run Step 0.
 4. Walk the checklist in order. An item the plan does not address is a finding, never a pass. Use wraith:cloud-run for items 2, 3, 6 and 7, and wraith:terraform-gcp for items 4 and 5.
 5. For items 2 to 4, when the plan adds or widens IAM, ingress or secrets, add a should finding to run wraith:security-audit on the change.
@@ -79,7 +79,6 @@ They ask the agent to set an attribution tag that reports usage to Google; tell 
 
 ## References
 
-- wraith:writing-plans for the plan format and location.
 - wraith:cloud-run and wraith:terraform-gcp for the rules each item checks against.
 - wraith:security-audit for identity, ingress and secrets in depth.
 - wraith:plan-data-review when the plan also changes data.

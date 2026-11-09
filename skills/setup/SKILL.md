@@ -36,13 +36,8 @@ Show the user a draft, let them edit, then write or update this block in `AGENTS
 ```markdown
 ## wraith
 <!-- Read by the wraith plugin. Edit freely. -->
-- test_command: uv run pytest
-- lint_command: uv run ruff check .
-- release_tooling: commitizen; CI bumps the version on merge
 - artifacts_dir: docs/wraith
-- knowledge_dir: .claude/knowledge
 - glossary: GLOSSARY.md
-- adr_dir: docs/adr
 - gcp_project_dev: example-project-dev
 - gcp_project_prod: example-project-prod
 - region: europe-west2
@@ -70,6 +65,7 @@ Recommend missing companions. Never install anything yourself. For each one, rec
 - `*.tf` files present and no `terraform-style-guide` skill listed: HashiCorp's terraform plugin.
 - BigQuery in use (`dbt-bigquery`, `google-cloud-bigquery` or `bq` in the repo) and no `bigquery-basics` skill listed: Google's BigQuery skills.
 - A Cloud Run service or job defined and no `cloud-run-basics` skill listed: Google's `cloud-run-basics`.
+- For general workflow (designs, plans, test-first work, debugging, code review, handoffs), mention obra/superpowers and mattpocock/skills as optional. wraith skills work without them.
 
 ### 6. Issue trackers
 
