@@ -22,8 +22,8 @@ Still open:
 1. Thirteen of the 28 skills at v0.6.1, and seven of the 12 agents, are generic process material copied from SP, MP and GS. Several are close to verbatim. One of the thirteen (wizard) is already gone; twelve remain.
 2. There is no Copilot uplift measurement. Every eval and benchmark ran in Claude Code.
 3. The Claude directory still holds v0.7.0 (`ba3b99b`) for content policy review: "Uses a credential from the user's machine", rule `MCP_FORWARDS_CREDENTIAL_ENV`, anchored on `.claude-plugin/plugin.json`. Removing wizard did not clear it. The manifest has no MCP servers, hooks or `userConfig`, so the scanner is matching text elsewhere in the plugin. Three places match the rule's description:
-   - `skills/qa/SKILL.md:49` and `skills/cloud-run/references/rollout.md:32` tell the agent to run `curl` with `Bearer $(gcloud auth print-identity-token)`: a credential read from the user's machine, sent to a server.
-   - `docs/adr/0002-companion-dbt.md:32` quotes a dbt MCP server config with a `uvx` command and a `DBT_TOKEN` for a hosted endpoint.
+   - `skills/qa/SKILL.md:49` and `skills/cloud-run/references/rollout.md:32` tell the agent to put a gcloud identity token into a `curl` authorization header: a credential read from the user's machine, sent to a server.
+   - `docs/adr/0002-companion-dbt.md:32` quotes a dbt MCP server config with a launch command and a dbt token variable for a hosted endpoint.
 
    The other directory findings (unrecognized listing fields, the `icon` field, the root agent-plugins `plugin.json`, images passed unread) say "No action needed" and get none.
 
@@ -324,9 +324,9 @@ Card H is its own branch and PR, merged first. Cards 1 to 7 then run on one bran
 
 ### Card H: clear the credential hold (haiku, own PR)
 **Owns:** skills/qa/SKILL.md, skills/cloud-run/references/rollout.md, docs/adr/0002-companion-dbt.md.
-**Decisions:** replace both `curl ... print-identity-token` lines with the proxy pair from the Decision; replace the ADR 0002 line 32 quote cell with "It writes an MCP server config that starts a downloaded server and needs a dbt platform token."
+**Decisions:** replace both token-header `curl` lines with the proxy pair from the Decision; replace the ADR 0002 line 32 quote cell with "It writes an MCP server config that starts a downloaded server and needs a dbt platform token."
 **Acceptance:**
-- `git grep -nE 'print-(identity|access)-token|DBT_TOKEN|Bearer' -- skills agents docs README.md` prints nothing.
+- `git grep -nE 'print-(identity|access)-to[k]en|DBT_TO[K]EN|Beare[r]' -- skills agents docs README.md` prints nothing.
 - `claude plugin validate --strict .` passes.
 
 **Commit:** `👻 fix/WSK-00108: smoke-test Cloud Run through gcloud proxy instead of a bearer token`
