@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.0 (2026-11-09)
+
+### Breaking Changes
+
+- remove the wizard skill (#108)
+
 ## v0.6.1 (2026-11-07)
 
 ### Bug Fixes
