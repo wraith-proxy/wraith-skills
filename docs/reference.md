@@ -22,7 +22,7 @@ Back to the [README](../README.md).
 | Reflect | `handoff` | `.../handoff.md` | |
 | Reflect | `knowledge-base` | knowledge files, GLOSSARY.md, ADRs | |
 | Safety | `careful` | nothing (conversation) | |
-| Meta | `using-wraith`, `setup`, `writing-skills`, `wizard` | AGENTS.md `## wraith` block (setup) | |
+| Meta | `using-wraith`, `setup`, `writing-skills` | AGENTS.md `## wraith` block (setup) | |
 
 Sprint artifacts go to `docs/wraith/<YYYY-MM-DD>-<topic>/` by default.
 
@@ -57,7 +57,6 @@ Sprint artifacts go to `docs/wraith/<YYYY-MM-DD>-<topic>/` by default.
 | careful | Safety | Makes the agent stop and confirm before destructive commands |
 | setup | Meta | Records project commands and targets in an AGENTS.md wraith block |
 | writing-skills | Meta | Creates and edits skills, agents, AGENTS.md and CLAUDE.md |
-| wizard | Meta | Generates interactive bash wizards for steps only humans can do |
 
 ## Agents
 
