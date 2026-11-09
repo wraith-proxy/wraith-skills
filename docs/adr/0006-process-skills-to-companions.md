@@ -445,3 +445,7 @@ The directory still held v0.7.1 (`cdb8f6d`) under the same rule after Card H. Th
 - **G6:** passed earlier; `wraith-build-copilot` deletes generated agents whose source is gone.
 - **AA pin:** the sync had moved the AA pin to `b859c51` without moving the `AA@b37b5bb` source lines, because the files were unchanged upstream. All nine files are identical at both commits, so the source lines and the notice now name `b859c51`, and wraith-tooling now moves unchanged files' source lines with their pin.
 - **G3** (gstack under Copilot) stays open; wraith names no gstack skill, so nothing depends on it.
+
+## Addendum 2026-11-09: fallback taken
+
+The hold remained on v0.8.1, so the fallback named in the first addendum was taken: ADR 0007 serves the plugin from `plugin/`.

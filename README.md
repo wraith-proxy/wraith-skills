@@ -26,7 +26,7 @@ to prod asking *are you sure?*
 <td align="center" width="25%"><h3>+31%</h3>planted problems caught in plan review<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L73-L78">131 vs 100 of 180</a></sub></td>
 <td align="center" width="25%"><h3>3 of 3</h3>planted defects found on case p10, against 2 of 3 without<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L66-L67">median run per arm</a></sub></td>
 <td align="center" width="25%"><h3>15 + 5</h3>skills and agents for dbt, BigQuery, Cloud Run, Terraform and ODCS<br><sub><a href="docs/reference.md">full list</a></sub></td>
-<td align="center" width="25%"><h3>0</h3>calls home. No telemetry, no fetches, no update checks<br><sub><a href="PRIVACY.md">privacy</a></sub></td>
+<td align="center" width="25%"><h3>0</h3>calls home. No telemetry, no fetches, no update checks<br><sub><a href="plugin/PRIVACY.md">privacy</a></sub></td>
 </tr>
 </table>
 
@@ -179,7 +179,7 @@ nothing, collects no telemetry and checks for no updates.
 Skills may suggest commands that download packages (for example
 `uvx check-jsonschema`); the agent runs them in the open.
 
-See [PRIVACY.md](PRIVACY.md) for the full statement.
+See [PRIVACY.md](plugin/PRIVACY.md) for the full statement.
 
 ## Companions
 
@@ -204,7 +204,7 @@ copilot plugin uninstall wraith
 ## Credits
 
 wraith builds on MIT-licensed work. Full notices are in
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[THIRD_PARTY_NOTICES.md](plugin/THIRD_PARTY_NOTICES.md).
 
 - [mattpocock/skills](https://github.com/mattpocock/skills)
 - [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)
@@ -235,5 +235,5 @@ Report problems and propose changes as issues on GitHub.
 <p align="center">👻 <b>A star costs nothing. A dropped prod dataset costs your weekend.</b></p>
 
 <p align="center">
-  <a href="PRIVACY.md">Privacy</a> | <a href="TERMS.md">Terms</a> | <a href="SUPPORT.md">Support</a> | <a href="SECURITY.md">Security</a> | <a href="LICENSE">License (MIT)</a>
+  <a href="plugin/PRIVACY.md">Privacy</a> | <a href="plugin/TERMS.md">Terms</a> | <a href="plugin/SUPPORT.md">Support</a> | <a href="SECURITY.md">Security</a> | <a href="LICENSE">License (MIT)</a>
 </p>
