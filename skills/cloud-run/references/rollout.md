@@ -26,10 +26,15 @@ gcloud run deploy <service> --image <region>-docker.pkg.dev/<project>/<repo>/<im
   --project <project> --region <region>
 ```
 
-## 4. Smoke test the tag URL
+## 4. Smoke test the tag
+
+The gcloud proxy handles authentication, so no token passes through the command line.
 
 ```bash
-curl -fsS -H "Authorization: Bearer $(gcloud auth print-identity-token)" <tag-url>/healthz
+gcloud run services proxy <service> --tag <tag> \
+  --project <project> --region <region> --port 8080 &
+curl -fsS http://localhost:8080/healthz
+kill %1
 ```
 
 ## 5. Move traffic
