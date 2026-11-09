@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.2 (2026-11-09)
+
+### Bug Fixes
+
+- serve the plugin from plugin/ (#112)
+
 ## v0.8.1 (2026-11-09)
 
 ### Bug Fixes
