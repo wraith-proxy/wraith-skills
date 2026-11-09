@@ -23,13 +23,6 @@ run in the open, with your credentials, subject to your agent's permission
 prompts and to each service's own privacy terms. wraith receives nothing
 from them.
 
-## Wizards
-
-If you ask for one, the wizard skill writes a bash script for you to run by
-hand. When you run it, it may write values to a local `.env` file (created
-readable only by you) and set GitHub Actions secrets or variables through
-your own `gh` command-line tool. Nothing is sent to wraith.
-
 ## Your AI host
 
 Your conversations, including the text wraith adds, are processed by your

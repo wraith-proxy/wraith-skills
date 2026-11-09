@@ -51,7 +51,7 @@ The user's direct requests first, then the project's AGENTS.md and CLAUDE.md, th
 | Reflect | wraith:handoff | `handoff.md` |
 | Reflect | wraith:knowledge-base | knowledge files, GLOSSARY.md, ADRs |
 | Safety | wraith:careful | nothing (conversation) |
-| Meta | wraith:using-wraith, wraith:setup, wraith:writing-skills, wraith:wizard | AGENTS.md `## wraith` block (setup) |
+| Meta | wraith:using-wraith, wraith:setup, wraith:writing-skills | AGENTS.md `## wraith` block (setup) |
 
 ## Which skill
 
@@ -64,7 +64,7 @@ The user's direct requests first, then the project's AGENTS.md and CLAUDE.md, th
 - What business entities mean: wraith:ontology-modeling. Making the warehouse usable by AI agents: wraith:context-layer.
 - A diff or PR: wraith:review. IAM, secrets, ingress or personal data: wraith:security-audit. Proving a change: wraith:qa. Integrating: wraith:ship. Production rollout: wraith:deploy.
 - Ending a session or heavy context: wraith:handoff. A lesson learned: wraith:knowledge-base.
-- Production work today: wraith:careful. A new repository: wraith:setup. Writing skills or agents: wraith:writing-skills. Steps only a human can do: wraith:wizard.
+- Production work today: wraith:careful. A new repository: wraith:setup. Writing skills or agents: wraith:writing-skills.
 
 ## Agents
 
