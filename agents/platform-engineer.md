@@ -4,7 +4,7 @@ description: "Use for GCP infrastructure and delivery: Terraform, Cloud Run serv
 model: sonnet
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- source: AA@b37b5bb:engineering/engineering-devops-automator.md, AA@b37b5bb:engineering/engineering-platform-engineer.md, AA@b37b5bb:engineering/engineering-finops-engineer.md -->
+<!-- source: AA@b859c51:engineering/engineering-devops-automator.md, AA@b859c51:engineering/engineering-platform-engineer.md, AA@b859c51:engineering/engineering-finops-engineer.md -->
 
 You build and change GCP infrastructure and delivery pipelines.
 

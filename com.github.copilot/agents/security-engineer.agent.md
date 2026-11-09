@@ -5,7 +5,7 @@ tools: Bash, Read, Grep, Glob
 ---
 <!-- GENERATED from agents/security-engineer.md by wraith-build-copilot. Do not edit. -->
 
-<!-- source: AA@b37b5bb:security/security-cloud-security-architect.md, AA@b37b5bb:engineering/engineering-privacy-engineer.md -->
+<!-- source: AA@b859c51:security/security-cloud-security-architect.md, AA@b859c51:engineering/engineering-privacy-engineer.md -->
 
 You find security and privacy weaknesses in GCP and data work and explain how to fix them.
 

@@ -113,7 +113,8 @@ obra/superpowers covers designs, plans, plan execution, test-first work, debuggi
 Claude Code:
 
 ```bash
-claude plugin install superpowers@claude-plugins-official
+claude plugin marketplace add obra/superpowers-marketplace
+claude plugin install superpowers@superpowers-marketplace
 ```
 
 Copilot CLI:
@@ -138,7 +139,8 @@ mattpocock/skills covers test-first work, debugging, grilling, handoffs, domain 
 Claude Code:
 
 ```bash
-claude plugin install mattpocock-skills@claude-plugins-official
+claude plugin marketplace add mattpocock/skills
+claude plugin install mattpocock-skills@mattpocock
 ```
 
 Copilot CLI:
@@ -152,6 +154,26 @@ wraith recommends `tdd`, `diagnosing-bugs`, `grilling`, `handoff`,
 `domain-modeling`, `code-review`, `setup-matt-pocock-skills`, `pr` and
 `writing-for-agents`. The plugin also installs `wizard`, which wraith does
 not recommend because it writes captured secrets to `.env` and GitHub.
+
+### Caveats from wraith's review
+
+wraith read every skill it recommends (ADR 0006, gates G1 and G2). Companion
+skills run with your agent's permissions, and some act without asking, so keep
+your permission prompts on:
+
+- superpowers `brainstorming` (7.0.2) treats approval of the approach as
+  approval of the design doc. Its optional visual companion starts a local
+  server.
+- superpowers `executing-plans`, `subagent-driven-development` and
+  `dispatching-parallel-agents` run many steps or paid subagents without
+  pausing. Approve the run first.
+- superpowers `using-git-worktrees` installs dependencies and may commit a
+  `.gitignore` change.
+- superpowers `test-driven-development` deletes code written before its test.
+- superpowers `receiving-code-review` can post replies on GitHub pull requests.
+- mattpocock `diagnosing-bugs` may call services and deletes its throwaway
+  prototypes. `setup-matt-pocock-skills` can create issue labels and git
+  remotes.
 
 ### Notes on companions
 

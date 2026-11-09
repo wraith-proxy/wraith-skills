@@ -435,3 +435,13 @@ The owner then opens the new awesome-copilot submission issue.
 ## Addendum 2026-11-09: hold remains on 0.7.1
 
 The directory still held v0.7.1 (`cdb8f6d`) under the same rule after Card H. The plugin root is the repository root, so CI workflows count as plugin content: `evals.yml` and `upstream-sync.yml` passed a model API key from repository secrets into `claude` runs. That secret was never set, so every such step only skipped. This change deletes `evals.yml` and those steps in `upstream-sync.yml`; evals run locally under the owner's subscription. If the hold remains on 0.8.0, the fallback is serving the plugin from a subdirectory so that only skills, agents and manifests ship.
+
+## Addendum 2026-11-09: gates G1, G2, G5 and G6 closed
+
+- **G1:** all 13 recommended SP skills and 9 recommended MP skills were read in full at the pins. None reads or writes local credentials. None is "do not recommend". Eleven carry caveats (installs, pushes, PR replies, scratch deletes or paid subagents without a pause); docs/reference.md lists them.
+- **G2:** the installs were run under a throwaway home on Claude Code and Copilot CLI 1.0.105. Copilot: both vendor marketplace commands work; SP lands as 7.0.2 with its SessionStart hook, MP as 1.3.2. Claude Code: `claude-plugins-official` does not exist on a fresh install (the directory marketplace is `anthropic-plugin-directory`, which has SP but not MP), so docs/reference.md now uses the vendor marketplaces on both hosts.
+- **SP 7.0.2 re-vet:** four named skills changed (brainstorming, executing-plans, subagent-driven-development, systematic-debugging) plus the session-start hook. One new risk: brainstorming now treats approval of the approach as approval of the design doc; that is a caveat, not a block. The SP pin moves to v7.0.2 (`22f0b46`).
+- **G5:** wraith-tooling now watches SP and MP as companions. A key that is both a companion and a derived source (MP, for `setup`) still gets its pin bumped.
+- **G6:** passed earlier; `wraith-build-copilot` deletes generated agents whose source is gone.
+- **AA pin:** the sync had moved the AA pin to `b859c51` without moving the `AA@b37b5bb` source lines, because the files were unchanged upstream. All nine files are identical at both commits, so the source lines and the notice now name `b859c51`, and wraith-tooling now moves unchanged files' source lines with their pin.
+- **G3** (gstack under Copilot) stays open; wraith names no gstack skill, so nothing depends on it.

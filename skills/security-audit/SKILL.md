@@ -3,7 +3,7 @@ name: security-audit
 description: "Use before shipping changes to IAM, secrets, networking, containers, CI or anything handling personal data, or when asked for a security review. Audits least privilege, credentials, ingress, supply chain and personal-data handling on GCP and writes findings with severity and evidence."
 license: MIT
 metadata:
-  source: "GS@1bd2330:cso/SKILL.md.tmpl, AA@b37b5bb:security/security-cloud-security-architect.md"
+  source: "GS@1bd2330:cso/SKILL.md.tmpl, AA@b859c51:security/security-cloud-security-architect.md"
 ---
 
 # Security audit
