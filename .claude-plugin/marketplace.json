@@ -5,7 +5,7 @@
   "plugins": [
     {
       "name": "wraith",
-      "source": "./",
+      "source": "./plugin",
       "description": "Agents don't hesitate before prod. wraith is the ghost that does. Skills and agents for data and infrastructure engineering on GCP: dbt, BigQuery, Cloud Run, Terraform, ODCS data contracts and ontologies."
     }
   ]

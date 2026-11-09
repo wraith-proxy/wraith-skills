@@ -29,3 +29,4 @@ jobs:
           node-version: 22
       - run: npm install -g @anthropic-ai/claude-code@2.1.316
       - run: claude plugin validate --strict .
+      - run: claude plugin validate --strict plugin

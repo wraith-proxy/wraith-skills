@@ -7,9 +7,9 @@
   "homepage": "https://github.com/wraith-proxy/wraith-skills",
   "repository": "https://github.com/wraith-proxy/wraith-skills",
   "documentationUrl": "https://github.com/wraith-proxy/wraith-skills#readme",
-  "supportUrl": "https://github.com/wraith-proxy/wraith-skills/blob/main/SUPPORT.md",
-  "privacyPolicyUrl": "https://github.com/wraith-proxy/wraith-skills/blob/main/PRIVACY.md",
-  "termsOfServiceUrl": "https://github.com/wraith-proxy/wraith-skills/blob/main/TERMS.md",
+  "supportUrl": "https://github.com/wraith-proxy/wraith-skills/blob/main/plugin/SUPPORT.md",
+  "privacyPolicyUrl": "https://github.com/wraith-proxy/wraith-skills/blob/main/plugin/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/wraith-proxy/wraith-skills/blob/main/plugin/TERMS.md",
   "license": "MIT",
   "icon": "./assets/icon.png",
   "keywords": ["data-engineering", "gcp", "bigquery", "dbt", "cloud-run", "terraform", "odcs", "data-contracts", "ontology", "agents"]
