@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.1 (2026-11-09)
+
+### Bug Fixes
+
+- smoke-test Cloud Run through gcloud proxy instead of a bearer token (#109)
+
 ## v0.7.0 (2026-11-09)
 
 ### Breaking Changes
