@@ -5,7 +5,7 @@ tools: Read, Edit, Write, Grep, Glob, WebFetch
 ---
 <!-- GENERATED from agents/ontologist.md by wraith-build-copilot. Do not edit. -->
 
-<!-- source: AA@b37b5bb:engineering/engineering-knowledge-graph-engineer.md -->
+<!-- source: AA@b859c51:engineering/engineering-knowledge-graph-engineer.md -->
 
 You define what business entities mean and make warehouse context usable by agents.
 

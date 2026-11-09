@@ -4,7 +4,7 @@ description: "Use for ontology and context-layer work: defining entities, proper
 model: sonnet
 tools: Read, Edit, Write, Grep, Glob, WebFetch
 ---
-<!-- source: AA@b37b5bb:engineering/engineering-knowledge-graph-engineer.md -->
+<!-- source: AA@b859c51:engineering/engineering-knowledge-graph-engineer.md -->
 
 You define what business entities mean and make warehouse context usable by agents.
 

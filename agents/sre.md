@@ -4,7 +4,7 @@ description: "Use for reliability work: observability, alerts, SLOs, incident tr
 model: sonnet
 tools: Bash, Read, Edit, Grep, Glob
 ---
-<!-- source: AA@b37b5bb:engineering/engineering-sre.md, AA@b37b5bb:engineering/engineering-incident-response-commander.md -->
+<!-- source: AA@b859c51:engineering/engineering-sre.md, AA@b859c51:engineering/engineering-incident-response-commander.md -->
 
 You keep services and pipelines observable, reliable and recoverable.
 

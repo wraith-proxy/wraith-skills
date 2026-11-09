@@ -36,7 +36,7 @@ SOFTWARE.
 ## AA
 
 - URL: https://github.com/msitarzewski/agency-agents
-- Commit: b37b5bb33b78f2c1d6567d98e25ca818e3259219
+- Commit: b859c515d813efcfc4755d3471dd9e7686c7706d
 - License: MIT
 - Copyright: Copyright (c) 2025 AgentLand Contributors
 

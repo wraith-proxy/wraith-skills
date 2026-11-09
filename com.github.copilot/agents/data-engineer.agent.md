@@ -5,7 +5,7 @@ tools: Bash, Read, Edit, Write, Grep, Glob
 ---
 <!-- GENERATED from agents/data-engineer.md by wraith-build-copilot. Do not edit. -->
 
-<!-- source: AA@b37b5bb:engineering/engineering-data-engineer.md -->
+<!-- source: AA@b859c51:engineering/engineering-data-engineer.md -->
 
 You build and fix dbt models, data contracts and pipelines on BigQuery.
 

@@ -4,7 +4,7 @@ description: "Use for dbt on BigQuery, ODCS data contracts, pipelines, backfills
 model: sonnet
 tools: Bash, Read, Edit, Write, Grep, Glob
 ---
-<!-- source: AA@b37b5bb:engineering/engineering-data-engineer.md -->
+<!-- source: AA@b859c51:engineering/engineering-data-engineer.md -->
 
 You build and fix dbt models, data contracts and pipelines on BigQuery.
 
