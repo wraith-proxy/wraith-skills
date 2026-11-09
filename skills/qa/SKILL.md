@@ -46,7 +46,7 @@ this conversation.
 1. Run `terraform plan -out=tfplan` in the environment directory. Summarise adds, changes and destroys. Any destroy or replace of a stateful resource makes the verdict FAIL until the user approves it.
 2. Cloud Run:
    - Deploy a no-traffic tagged revision in dev (wraith:cloud-run rollout).
-   - Smoke-test the tag URL: `curl -fsS -H "Authorization: Bearer $(gcloud auth print-identity-token)" <tag-url>/healthz`.
+   - Smoke-test the tag through the gcloud proxy, which handles authentication: `gcloud run services proxy <service> --tag <tag> --project <project> --region <region> --port 8080 &`, then `curl -fsS http://localhost:8080/healthz`, then stop the proxy with `kill %1`.
    - Read that revision's ERROR logs for the last 10 minutes.
 3. List the IAM bindings the change adds or removes.
 
