@@ -236,3 +236,7 @@ agent loads and replies `MANGO`, after `Warning: Custom agent
   `npx skills` (Node 22.20+, writes `skills-lock.json`, has telemetry).
 - PLAN.md stays local and is never committed (owner instruction,
   2026-11-02); section 2.11 and step 0.2 are superseded on that point.
+
+## Addendum 2026-11-09: plugin moved to plugin/
+
+ADR 0007 moves the plugin into `plugin/`. The manifests, `com.github.copilot/agents/`, skills and agents described above now sit under that folder; the marketplace file stays at the repo root with `"source": "./plugin"`.

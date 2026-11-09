@@ -9,4 +9,4 @@ body empty and the release falls back to the generated notes alone. Comments
 like this one are stripped.
 -->
 
-wraith now ships only its data and GCP skills: 15 skills and 5 agents. The process skills (brainstorming, writing-plans, orchestrating-agents, tdd, systematic-debugging, verification-before-completion, grilling, handoff, knowledge-base, writing-skills, review and ship) and the architect, implementer, reviewer, tester, junior-dev, docs-writer and git-workflow-master agents are gone. Install obra/superpowers and mattpocock/skills for those workflows; docs/reference.md lists which skills wraith recommends. The wraith block keys test_command, lint_command, release_tooling, knowledge_dir and adr_dir are no longer read.
+wraith now lives in the `plugin/` folder of its repository, so an install carries only the plugin: manifests, skills, agents, the icon and the legal files. The marketplace and plugin names are unchanged, so update as usual. A direct Copilot install of the repository root no longer works; use the marketplace, or `copilot plugin install wraith-proxy/wraith-skills:plugin`.
