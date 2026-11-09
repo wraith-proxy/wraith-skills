@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.1 (2026-11-09)
+
+### Bug Fixes
+
+- close companion gates, fix install commands, align AA source lines (#111)
+
 ## v0.8.0 (2026-11-09)
 
 ### Breaking Changes
