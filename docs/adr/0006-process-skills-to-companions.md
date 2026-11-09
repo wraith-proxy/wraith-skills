@@ -431,3 +431,7 @@ Run G4 on the 0.8.0 tag.
 **Commit:** `👻 docs/WSK-00108: add Copilot CLI benchmark results`
 
 The owner then opens the new awesome-copilot submission issue.
+
+## Addendum 2026-11-09: hold remains on 0.7.1
+
+The directory still held v0.7.1 (`cdb8f6d`) under the same rule after Card H. The plugin root is the repository root, so CI workflows count as plugin content: `evals.yml` and `upstream-sync.yml` passed a model API key from repository secrets into `claude` runs. That secret was never set, so every such step only skipped. This change deletes `evals.yml` and those steps in `upstream-sync.yml`; evals run locally under the owner's subscription. If the hold remains on 0.8.0, the fallback is serving the plugin from a subdirectory so that only skills, agents and manifests ship.
