@@ -25,7 +25,7 @@ to prod asking *are you sure?*
 <tr>
 <td align="center" width="25%"><h3>+31%</h3>planted problems caught in plan review<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L73-L78">131 vs 100 of 180</a></sub></td>
 <td align="center" width="25%"><h3>3 of 3</h3>planted defects found on case p10, against 2 of 3 without<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L66-L67">median run per arm</a></sub></td>
-<td align="center" width="25%"><h3>27 + 12</h3>skills and agents for dbt, BigQuery, Cloud Run, Terraform and ODCS<br><sub><a href="docs/reference.md">full list</a></sub></td>
+<td align="center" width="25%"><h3>15 + 5</h3>skills and agents for dbt, BigQuery, Cloud Run, Terraform and ODCS<br><sub><a href="docs/reference.md">full list</a></sub></td>
 <td align="center" width="25%"><h3>0</h3>calls home. No telemetry, no fetches, no update checks<br><sub><a href="PRIVACY.md">privacy</a></sub></td>
 </tr>
 </table>
@@ -85,7 +85,7 @@ with it. <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf
 
 **What this does not prove:** these numbers measure plan review, a
 destructive-command test of `careful` and ODCS contract writing, on one
-model, one date and fixtures we wrote. Every other claim on this page is a
+model, one date and fixtures we wrote, with wraith v0.6.0 in Claude Code. Every other claim on this page is a
 description, not a measurement.
 
 ## Careful
@@ -127,19 +127,20 @@ agent ignores the skill, so keep your permission prompts on.
   data and rollback before anyone builds it.
 - `odcs-contracts`: writes and validates the data contract, and keeps your dbt
   models in step with it.
-- `orchestrating-agents`: runs a written plan one card at a time through fresh
-  subagents, and checks each result.
+- `deploy`: rolls out to production with a traffic split, with the rollback
+  written first.
 
-## One sprint
+## Where wraith fits
 
-```text
-think → plan → build → review → test → ship → reflect
-```
+wraith covers the parts of the job that are specific to data on GCP: plan
+review, data contracts, dbt and BigQuery builds, Cloud Run and Terraform,
+security review, QA against a dev target, production rollout and `careful`.
+The general workflow (designs, plans, test-first work, debugging, code review)
+comes from your own process or from the [companions](#companions).
 
-Every phase leaves a file under `docs/wraith/<date>-<topic>/`, so the next
-session, or the next engineer, picks up where the last one stopped. To see one
-sprint as committed files, read the [worked example](docs/example/README.md).
-Every skill and agent is in [docs/reference.md](docs/reference.md).
+To see the artifacts on a toy project, read the
+[worked example](docs/example/README.md). Every skill and agent is in
+[docs/reference.md](docs/reference.md).
 
 ## Why wraith and not a general skills pack
 
@@ -150,7 +151,6 @@ what a GCP data team keeps needing:
 - ODCS data contracts as the source of truth for your models.
 - Blast-radius review of GCP infrastructure plans.
 - A skill that stops to ask before destructive commands.
-- One sprint: plan, build, review, ship.
 
 ## FAQ
 
@@ -160,8 +160,8 @@ pushes, deletes or spends beyond your dev cost cap still needs your explicit
 go-ahead in the conversation.
 
 **Do I need GCP?**
-The sprint and `careful` work on any project. The domain skills (BigQuery,
-dbt on BigQuery, Cloud Run, Terraform on GCP) are written for data teams on
+`careful` works on any project. The other skills (BigQuery, dbt on BigQuery,
+Cloud Run, Terraform on GCP, ODCS contracts) are written for data teams on
 GCP.
 
 **Claude Code or Copilot?**
@@ -183,10 +183,12 @@ See [PRIVACY.md](PRIVACY.md) for the full statement.
 
 ## Companions
 
-wraith does not copy vendor skills. It names them, and you install them from
-the vendors (dbt Labs, Google, HashiCorp). Install steps and notes are in
-[docs/reference.md](docs/reference.md#companions). Vendor skills run with your
-agent's full permissions, so skim each SKILL.md before installing.
+wraith does not copy other people's skills. It names them, and you install
+them from the source: dbt Labs, Google and HashiCorp for vendor mechanics, and
+obra/superpowers and mattpocock/skills for the general workflow. Install steps
+and notes are in [docs/reference.md](docs/reference.md#companions). Companion
+skills run with your agent's full permissions, so skim each SKILL.md before
+installing. superpowers installs a SessionStart hook of its own.
 
 ## Requirements
 

@@ -1,7 +1,7 @@
 # wraith-skills
 
 wraith is a plugin of skills and agents for data and infrastructure
-engineering on GCP, run as a plan, build, review, ship sprint.
+engineering on GCP.
 It serves Claude Code and GitHub Copilot from one repository.
 
 ## Commands
