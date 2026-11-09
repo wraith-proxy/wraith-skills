@@ -33,7 +33,7 @@ Also when a dataset needs schema, quality rules, SLAs or classification.
 Contracts live in `<contracts_dir>`, read from the `## wraith` block of the project's AGENTS.md. If the key is missing, ask once and suggest wraith:setup.
 
 Create:
-1. Start from the wraith:brainstorming design: objects, keys, owners, sensitive fields.
+1. Start from the request or design: objects, keys, owners, sensitive fields. Ask for whatever is missing.
 2. Draft the contract from [example-contract.yaml](references/example-contract.yaml), following [odcs-basics.md](references/odcs-basics.md).
 3. Declare the classification set, classify each sensitive property, name the owning team.
 4. Validate (see Commands).
@@ -54,6 +54,12 @@ All paths come from `<contracts_dir>`. `uvx` downloads the validator, and the ag
 - Validate: `uvx check-jsonschema==0.39.0 --schemafile https://raw.githubusercontent.com/bitol-io/open-data-contract-standard/v3.2.0/schema/odcs-json-schema-v3.2.0.json <contract>`
 - If the project uses datacontract-cli (pin 1.2.9): `datacontract lint <contract>` and `datacontract test <contract>`.
 - If it uses wraith-modelgen: `modelgen validate --strict <contract>` and `modelgen check --from-contract --diff`.
+
+## Review checklist
+
+- each contract change classified as additive or breaking
+- a breaking change has a version bump and consumer notice
+- new fields mapped to ontology terms or flagged
 
 ## References
 

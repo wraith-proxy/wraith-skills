@@ -65,6 +65,21 @@ Telemetry: these skills ask the agent to set an attribution tag that reports usa
 
 Where they and this skill disagree, this skill wins for dry runs and cost caps, dataset ownership and location, access, and crypto-shredding (rules 2, 6, 7 and 9). Google publishes its skills from main without release tags, so their commands go through wraith:plan-infra-review before touching shared environments.
 
+## Review checklist
+
+- dry-run bytes stated for new heavy queries
+- `require_partition_filter` on large partitioned tables
+- no project-level admin grants
+- classified columns protected by policy tag or encryption
+
+## When it fails
+
+- "Resources exceeded": reduce sort and window sizes, use approximate aggregates, prune partitions.
+- "Quota exceeded": check rate limits, or concurrent DML on one table.
+- "bytes billed" limit hit: dry-run the query and prune partitions and columns.
+- "Access Denied": name the principal and the missing permission. Use `gcloud projects get-iam-policy <project>` and the IAM Policy Troubleshooter.
+- Inspect any job with `bq show -j <job_id>`.
+
 ## References
 
 - [cost-queries.md](references/cost-queries.md): four INFORMATION_SCHEMA.JOBS cost queries.
