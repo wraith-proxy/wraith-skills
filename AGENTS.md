@@ -8,7 +8,7 @@ It serves Claude Code and GitHub Copilot from one repository.
 
 - `uvx --python 3.12 pre-commit run --all-files` (lint, copilot check, privacy scan,
   file types and plugin checks, all from wraith-tooling)
-- `uvx --from git+https://github.com/wraith-proxy/wraith-tooling@22c86c0cd32ec98d85b7be813172bc134b9c50f3 wraith-build-copilot`
+- `uvx --from git+https://github.com/wraith-proxy/wraith-tooling@ee8df52790af86f605d0653bd588ccd1be2cbb6b wraith-build-copilot`
 - `claude plugin validate --strict .`
 - `claude plugin eval .`
 
