@@ -23,8 +23,8 @@ to prod asking *are you sure?*
 
 <table align="center">
 <tr>
-<td align="center" width="25%"><h3>+31%</h3>planted problems caught in plan review<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L73-L78">131 vs 100 of 180</a></sub></td>
-<td align="center" width="25%"><h3>3 of 3</h3>planted defects found on case p10, against 2 of 3 without<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L66-L67">median run per arm</a></sub></td>
+<td align="center" width="25%"><h3>+26 pts</h3>planted problems caught in plan review, Claude Code (+27 on Copilot, likely overstated)<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/e4f7d165796a70c38dda7f66f72879ce90578097/docs/2026-11-09-two-hosts.md#plan-review">162 vs 115 of 180</a></sub></td>
+<td align="center" width="25%"><h3>0 of 25</h3>destructive commands stopped on Copilot. On Claude Code, 19 of 25 against 2 of 25<br><sub><a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/e4f7d165796a70c38dda7f66f72879ce90578097/docs/2026-11-09-two-hosts.md#guard-works-on-claude-code-not-on-copilot">guard results</a></sub></td>
 <td align="center" width="25%"><h3>15 + 5</h3>skills and agents for dbt, BigQuery, Cloud Run, Terraform and ODCS<br><sub><a href="docs/reference.md">full list</a></sub></td>
 <td align="center" width="25%"><h3>0</h3>calls home. No telemetry, no fetches, no update checks<br><sub><a href="plugin/PRIVACY.md">privacy</a></sub></td>
 </tr>
@@ -63,30 +63,52 @@ In Claude Code, skills appear as `/wraith:<skill>` and agents as
 ## Proof
 
 <p align="center">
-  <img src="assets/numbers.png" width="640" alt="Plan review, planted problems found: with wraith 72.8% (131 of 180), without 55.6% (100 of 180)">
+  <img src="assets/headline.png" width="720" alt="Bar chart of plan review found, guard not attempted and contracts first write valid, with and without wraith, on Claude Code and Copilot CLI, with Wilson 95 percent whiskers">
 </p>
 
-<p align="center"><sub>12 plan-review cases, 5 runs per arm, 3 planted problems each, judged by majority vote. Whiskers are Wilson 95% intervals. Source: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L73-L78">Totals in the results</a>.</sub></p>
+<p align="center"><sub>wraith v0.8.3 on both hosts, 5 runs per case per arm. Whiskers are Wilson 95% intervals. Source: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/e4f7d165796a70c38dda7f66f72879ce90578097/docs/2026-11-09-two-hosts.md">the two-host write-up</a>, with method, tallies and limits.</sub></p>
 
-Same 12 plans, same planted problems. With wraith the agent catches 131 of
-180. Without it, 100. The intervals do not overlap.
+| With wraith against without | Claude Code | Copilot CLI |
+|---|---|---|
+| Plan review, planted problems found (180 per arm) | 90.0% against 63.9% | 76.7% against 49.4% |
+| Contracts, first write valid (25 per arm) | 100% against 8% | 64% against 4% |
+| Guard, destructive command not attempted (25 per arm) | 76% against 8% | **0% against 4%** |
 
-<p align="center">
-  <img src="assets/before-after.png" width="640" alt="The same plan review with and without wraith: without finds 2 of 3 planted defects, with finds all 3">
-</p>
+**Plan review.** Twelve plans, three planted problems each. A problem counts
+as found when two of three Haiku votes say the review names it and ties it to
+the right part of the plan. The gain is concentrated in rollback and
+scanned-bytes cost. Duplicate handling is level.
 
-<p align="center"><sub>Benchmark case p10, one run per arm (each the median of its 5). Source rows: <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07.md?plain=1#L66-L67">p10 in the results</a>.</sub></p>
+**Contracts.** Each first write is checked against the ODCS v3 JSON Schema.
+On Claude Code every invalid file without wraith fails on one field,
+`servers[0].location`. On Copilot, without wraith the agent writes the older
+Data Contract Specification shape, which ODCS v3 rejects.
 
-**Contracts.** Five tables, 5 runs per arm, each first write checked against
-the ODCS v3.2.0 JSON Schema: 25 of 25 valid with wraith, 2 of 25 without.
-Read that with care. All 23 invalid files fail on the same field,
-`servers[0].location`, which the agent adds without wraith and does not
-with it. <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07-bash-tasks.md?plain=1#L13-L18">Rows in the results</a>.
+**Cost.** wraith roughly doubles the cost of a plan review, because the agent
+reads the skill and the files it points to.
 
-**What this does not prove:** these numbers measure plan review, a
-destructive-command test of `careful` and ODCS contract writing, on one
-model, one date and fixtures we wrote, with wraith v0.6.0 in Claude Code. Every other claim on this page is a
-description, not a measurement.
+### What this does not prove
+
+- **The judge is strict and biased against the `without` arm.** In a blind
+  audit of 72 runs, 64 matched the judge (88.9%). All 8 disagreements go one
+  way: the judge said FAIL where the owner said PASS. On Copilot plan review
+  the `without` arm is undercounted (9 of 16 passed by hand, 5 of 16 by the
+  judge), so the Copilot gap of 27 points is probably overstated. On Claude
+  Code the `without` arm agreed 13 of 13, so that gap holds.
+- **The guard does not work on Copilot.** `careful` was available in every
+  `with` run and was called in none: 0 of 25 destructive commands stopped. A
+  sharper `careful` description changed nothing (0 of 40 calls, 80 runs) and
+  was not shipped.
+- **Two judges on Claude Code.** The eval's own judge sees only the reply and
+  gives 64.4% against 54.4%. The headline uses a re-judge that also reads text
+  the agent wrote into files, the same rule as the Copilot tally. The two agree
+  on 80.8% of problems.
+- **Small samples on fixtures we wrote.** Five runs per case per arm, one
+  model per host (Copilot Fusion routes between models), two dates. Only
+  large differences clear the intervals. Contracts on Copilot are scored for
+  schema validity only. Traces are not published.
+
+Every other claim on this page is a description, not a measurement.
 
 ## Careful
 
@@ -106,18 +128,22 @@ The `careful` skill tells the agent to stop before the classics:
 `git branch -D` and `rm -rf` on `/` or `~`. It says what the command destroys
 and waits for your yes, even if you told it not to ask.
 
-We measured it: five destructive prompts (`bq rm`, `terraform destroy`,
-`gsutil rm -r`, `git push --force`, `DROP TABLE`), 5 runs per arm, Claude
-Sonnet 5.5, with `bq`, `terraform` and `gsutil` stubbed so nothing could be
-deleted. Without wraith the agent ran the command in 21 of 25 runs. With
-wraith it ran it in 9 of 25, and stopped to ask you in 11 (without wraith it
-asked in 4, all on a `terraform destroy` with nothing to destroy). Five of
-the 16 non-attempts were the stub sandbox failing a read-only check, not the
-skill, and `careful` loaded in only 11 of 40 runs with wraith, never for
-`git push --force` or `sqlite3 DROP TABLE`. <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/cdadbbf79cc86e935232e281c9c531ccf9a46cd0/benchmarks/results/2026-11-07-bash-tasks.md?plain=1#L13-L18">Rows in the results</a>.
+We measured it on both hosts (wraith v0.8.3, five destructive prompts: `bq rm`,
+`terraform destroy`, `gsutil rm -r`, `git push --force`, `DROP TABLE`, 5 runs
+per arm, with `bq`, `terraform` and `gsutil` stubbed so nothing could be
+deleted). **On Claude Code** the agent did not attempt the command in 19 of 25
+runs with wraith and 2 of 25 without. `careful` loaded in 15 of the 25 and
+none of those 15 ran the command. The gap is `git push --force`: attempted 5
+of 5 times, and `careful` never loaded. **On Copilot CLI it did not work.**
+`careful` was available in every run with wraith and loaded in none, and the
+destructive command ran in all 25. <a href="https://github.com/wraith-proxy/wraith-benchmarks/blob/e4f7d165796a70c38dda7f66f72879ce90578097/docs/2026-11-09-two-hosts.md#guard-works-on-claude-code-not-on-copilot">Rows and method</a>.
 
-It is an instruction, not a check. Nothing in wraith blocks the command if the
-agent ignores the skill, so keep your permission prompts on.
+![Guard outcomes on both hosts: attempted, asked, stopped](assets/guard-outcomes.png)
+
+`careful` is an instruction, not a check. Nothing in wraith blocks the
+command if the agent ignores the skill, and on Copilot the agent ignored it.
+**Your host's native tool approvals remain the safety boundary.** Keep them
+on, on both hosts, and do not rely on wraith to stop a destructive command.
 
 ## Start here
 
@@ -165,7 +191,8 @@ Cloud Run, Terraform on GCP, ODCS contracts) are written for data teams on
 GCP.
 
 **Claude Code or Copilot?**
-Both, from one repository, with the same skills and agents.
+Both, from one repository, with the same skills and agents. Plan review and
+contracts help on both. The `careful` guard only works on Claude Code.
 
 **Why "wraith"?**
 Because every GCP project is haunted by something nobody remembers creating.
