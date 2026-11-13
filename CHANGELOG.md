@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.4 (2026-11-13)
+
+### Bug Fixes
+
+- sync upstream AA (#114)
+
 ## v0.8.3 (2026-11-09)
 
 ### Bug Fixes
