@@ -246,3 +246,17 @@ accepting it.
 
 The owner accepts the bump by merging it, after reading the diff in
 the pull request.
+
+## Addendum 2026-11-13: pin bumped to 85f227e
+
+Ticket: WSK-00116. Drafted by the nightly upstream sync
+(#95). The GCP pin moves from 993b979 to
+85f227ea6a8f347d34b76039d826c446f891f75d. Named skills changed: `bigquery-observability`, `bigquery-udfs`, `datalineage-summary`, `gcloud`, `google-cloud-waf-security`, `iam-helper-for-privileged-access-management`.
+Files changed: 16. Automated scan: 16 risk hits (new-url).
+
+No machine read (no usable answer from the machine read),
+so a human must read the diff in the pull request before
+accepting it.
+
+The owner accepts the bump by merging it, after reading the diff in
+the pull request.
