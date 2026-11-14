@@ -260,3 +260,17 @@ accepting it.
 
 The owner accepts the bump by merging it, after reading the diff in
 the pull request.
+
+## Addendum 2026-11-14: pin bumped to 67c4dbc
+
+Ticket: WSK-00119. Drafted by the nightly upstream sync
+(#95). The GCP pin moves from 85f227e to
+67c4dbc8ff6313ef117d938e53bb21315fc281ae. Named skills changed: `google-cloud-waf-reliability`.
+Files changed: 1. Automated scan: no risk hits.
+
+No machine read (no usable answer from the machine read),
+so a human must read the diff in the pull request before
+accepting it.
+
+The owner accepts the bump by merging it, after reading the diff in
+the pull request.

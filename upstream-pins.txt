@@ -3,5 +3,5 @@ MP https://github.com/mattpocock/skills v1.3.2 d1478fcb140db0b93c0c8df17bcfd3118
 AA https://github.com/msitarzewski/agency-agents - 8ae6164602c95ca78828b148b9052460ee426885
 GS https://github.com/garrytan/gstack v1.91.318.0 1bd2330350a6aa978f5c91de3c0be97004d0617b
 DBT https://github.com/dbt-labs/dbt-agent-skills - b8facde20b7a92c40ce3e6b86b71c4b92aa44040
-GCP https://github.com/google/skills - 85f227ea6a8f347d34b76039d826c446f891f75d
+GCP https://github.com/google/skills - 67c4dbc8ff6313ef117d938e53bb21315fc281ae
 TF https://github.com/hashicorp/agent-skills - 5e30fa5c867ba6777c37e4206babfd08049c396f
